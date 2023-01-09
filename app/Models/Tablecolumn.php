@@ -54,6 +54,7 @@ class Tablecolumn extends Model
             'contact' => 'Contact',
             'color' => 'Color',
             'email' => 'Email',
+            'purpose' => 'Purpose',
             'region' => 'Region',
             'location' => 'Location',
             'expiration_date' => 'Expiration Date',
@@ -96,7 +97,7 @@ class Tablecolumn extends Model
 
     public static function getColumn($table){
         $column = array();
-        $preselected = array('code', 'description','color','office', 'department');
+        $preselected = array('code', 'description','color','office', 'department','purpose', 'employee_id');
 
         $record = DB::table('tablecolumns')->where('table', $table)->get();
         foreach ($record as $key => $value) {

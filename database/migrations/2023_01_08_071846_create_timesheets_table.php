@@ -46,6 +46,21 @@ return new class extends Migration
             $table->string('username', 100)->nullable();
             $table->timestamp('created_at')->nullable()->useCurrent();
         });
+
+        Schema::dropIfExists('timesheets_trail_history');
+
+        Schema::create('timesheets_trail_history', function (Blueprint $table) {
+            $table->id();
+            $table->string('employee_id', 20)->nullable();
+            $table->dateTime('log_time', $precision = 0)->nullable();
+            $table->string('local_time')->nullable();
+            $table->string('log_type', 100)->nullable()->default('IN');
+            $table->string('username', 100)->nullable();
+            $table->string('ip', 100)->nullable();
+            $table->string('location', 100)->nullable();
+            $table->string('machine_type', 100)->nullable();
+            $table->timestamp('created_at')->nullable()->useCurrent();
+        });
     }
 
     /**

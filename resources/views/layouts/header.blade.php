@@ -664,6 +664,52 @@ $mainmenu = 1;
         }
     }
 
+    // Get Base64 From URL
+    const getBase64FromUrl = async (url) => {
+        const data = await fetch(url);
+        const blob = await data.blob();
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(blob); 
+            reader.onloadend = () => {
+                const base64data = reader.result;   
+                resolve(base64data);
+            }
+        });
+    }
+
+    // Resize Image Base64
+    function resizeImage(base64Str, maxWidth = 400, maxHeight = 350) {
+        return new Promise((resolve) => {
+            let img = new Image()
+            img.src = base64Str
+            img.onload = () => {
+                let canvas = document.createElement('canvas')
+                const MAX_WIDTH = maxWidth
+                const MAX_HEIGHT = maxHeight
+                let width = img.width
+                let height = img.height
+                
+                if (width > height) {
+                    if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width
+                        width = MAX_WIDTH
+                    }
+                } else {
+                    if (height > MAX_HEIGHT) {
+                        width *= MAX_HEIGHT / height
+                        height = MAX_HEIGHT
+                    }
+                }
+                canvas.width = width
+                canvas.height = height
+                let ctx = canvas.getContext('2d')
+                ctx.drawImage(img, 0, 0, width, height)
+                resolve(canvas.toDataURL())
+            }
+        })
+    }
+
     // compares the hours and minutes of the start and end times of each period using additional conditions. 
     function timeOverlapChecker(periods) {
        for (let i = 0; i < periods.length - 1; i++) {

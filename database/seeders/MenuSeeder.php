@@ -235,5 +235,37 @@ class MenuSeeder extends Seeder
             'description' => "Visual display of all of your attendance"
         ]);
 
+        Menu::factory()->create([
+            'root' => '0',
+            'menu_id' => function () {
+                $max = Menu::count('id'); // returns 0 if no records exist.
+                return $max + 1;
+            },
+            'order' => function () {
+                $maxOrder = Menu::where('root', '=', '0')->count('order'); // returns 0 if no records exist.
+                return $maxOrder + 1;
+            },
+            'title' => 'My Work Request',
+            'link' => 'wfh/wfh',
+            'icon' => 'file-earmark-richtext',
+            'description' => "List of work requests"
+        ]);
+
+        Menu::factory()->create([
+            'root' => '0',
+            'menu_id' => function () {
+                $max = Menu::count('id'); // returns 0 if no records exist.
+                return $max + 1;
+            },
+            'order' => function () {
+                $maxOrder = Menu::where('root', '=', '0')->count('order'); // returns 0 if no records exist.
+                return $maxOrder + 1;
+            },
+            'title' => 'Manage Work Request',
+            'link' => 'ob/ob_manage',
+            'icon' => 'card-checklist',
+            'description' => "List of work requests"
+        ]);
+
     }
 }
