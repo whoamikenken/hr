@@ -125,6 +125,7 @@ Route::post('/employee/add', [EmployeeController::class, 'store']);
 Route::post('/employee/store', [EmployeeController::class, 'updateEmployeeData']);
 Route::post('/employee/profile', [EmployeeController::class, 'profile'])->withoutMiddleware([VerifyCsrfToken::class]);
 Route::post('/employee/saveApplicant', [EmployeeController::class, 'saveApplicant'])->withoutMiddleware([VerifyCsrfToken::class]);
+Route::post('/employee/schedule', [EmployeeController::class, 'schedule'])->withoutMiddleware([VerifyCsrfToken::class]);
 
 // Test Email Function
 Route::get('/applicant/testEmail', [ApplicantController::class, 'testEmail'])->withoutMiddleware([VerifyCsrfToken::class]);

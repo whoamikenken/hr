@@ -262,7 +262,7 @@ $mainmenu = 1;
             <div class="col px-0">
                 <nav class="navbar navbar-expand-md navbar-light shadow-sm" style="background-color:#212e3a">
                     <div class="container-fluid">
-                        <a class="navbar-brand text-white" href="{{ url('/') }}" style="font-weight: 600;">
+                        <a class="navbar-brand text-white" href="{{ url('/home') }}" style="font-weight: 600;">
                             {{-- <img src="{{ asset('images/logo.png')}}" alt="" width="30" height="24" class="d-inline-block align-text-top"> --}}
                             HR Management
                         </a>

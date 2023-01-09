@@ -182,6 +182,37 @@ class EmployeeController extends Controller
         return response()->json($return);
     }
 
+    public function schedule(Request $request)
+    {
+        $data = array();
+
+        $formFields = $request->validate([
+            'uid' => ['required'],
+        ]);
+
+        $data['uid'] = $formFields['uid'];
+
+        $data['record'] = DB::table('schedules_detail_employee')->where("employee_id", $data['uid'])->get();
+
+        $data['dow'] = array("M" => "Monday", "T" => "Tuesday", "W" => "Wednesday", "TH" => "Thursday", "F" => "Friday", "S" => "Saturday", "SUN" => "Sunday");
+        $data['sched_per_day'] = array();
+        foreach ($data['dow'] as $dow_code => $dow_desc) {
+            $where = array();
+            $where[] = array('dayofweek', $dow_code);
+            if ($formFields['uid'] != "add") {
+                $sched = DB::table('schedules_detail_employee')->where($where)->where("employee_id", $formFields['uid'])->get();
+                $data['sched_per_day'][$dow_code] = $sched;
+            } else {
+                $data['sched_per_day'][$dow_code] = array();
+            }
+        }
+
+        $data['readAccess'] = explode(",", Extras::getAccessList("read", Auth::user()->username));
+        $data['editAccess'] = explode(",", Extras::getAccessList("edit", Auth::user()->username));
+        // dd($data);
+        return view('user/employee_schedule', $data);
+    }
+
     public function saveApplicant(Request $request)
     {
         $return = array('status' => 0, 'msg' => 'Error', 'title' => 'Error!');

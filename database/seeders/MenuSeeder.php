@@ -201,5 +201,21 @@ class MenuSeeder extends Seeder
             'description' => "Creating new Department"
         ]);
 
+        Menu::factory()->create([
+            'root' => '0',
+            'menu_id' => function () {
+                $max = Menu::count('id'); // returns 0 if no records exist.
+                return $max + 1;
+            },
+            'order' => function () {
+                $maxOrder = Menu::where('root', '=', '0')->count('order'); // returns 0 if no records exist.
+                return $maxOrder + 1;
+            },
+            'title' => 'Attendance',
+            'link' => 'attendance',
+            'icon' => 'range-fill',
+            'description' => "Visual display of all of your attendance"
+        ]);
+
     }
 }

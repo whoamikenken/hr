@@ -56,7 +56,7 @@ class ScheduleController extends Controller
             $where = array();
             $where[] = array('dayofweek', $dow_code);
             if($formFields['uid'] != "add") {
-            $where[] = array('schedid',$formFields['uid']);
+            $where[] = array('sched_id',$formFields['uid']);
             $sched = DB::table('schedules_detail')->where($where)->get();
             $data['sched_per_day'][$dow_code] = $sched;
             }else{
@@ -95,7 +95,7 @@ class ScheduleController extends Controller
                 $time = explode("-", $schedData[1]);
 
                 $schedDataInsert = array();
-                $schedDataInsert['schedid'] = $lastId;
+                $schedDataInsert['sched_id'] = $lastId;
                 $schedDataInsert['starttime'] = isset($time[0]) ? date("H:i:s", strtotime($time[0])) : '';
                 $schedDataInsert['endtime'] = isset($time[1]) ? date("H:i:s", strtotime($time[1])) : '';
                 $schedDataInsert['tardy_start'] = isset($schedData[2]) ? date("H:i:s", strtotime($schedData[2])) : '';
@@ -113,14 +113,14 @@ class ScheduleController extends Controller
             DB::table("schedules")->where('id', $id)->update($formFields);
 
             // Delete detail
-            DB::table("schedules_detail")->where('schedid', '=', $id)->delete();
+            DB::table("schedules_detail")->where('sched_id', '=', $id)->delete();
             foreach (explode("|", $scheduleData) as $key => $value) {
                 $schedData = explode("~u~", $value);
                 // dd($schedData[0]);
                 $time = explode("-", $schedData[1]);
 
                 $schedDataInsert = array();
-                $schedDataInsert['schedid'] = $id;
+                $schedDataInsert['sched_id'] = $id;
                 $schedDataInsert['starttime'] = isset($time[0]) ? date("H:i:s", strtotime($time[0])) : '';
                 $schedDataInsert['endtime'] = isset($time[1]) ? date("H:i:s", strtotime($time[1])) : '';
                 $schedDataInsert['tardy_start'] = isset($schedData[2]) ? date("H:i:s", strtotime($schedData[2])) : '';

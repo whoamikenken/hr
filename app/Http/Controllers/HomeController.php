@@ -108,7 +108,7 @@ class HomeController extends Controller
             $where[] = array("description", "LIKE", "%" . $data['search'] . "%");
             $record = DB::table('schedules')->where($where)->limit($limit)->get();
             foreach ($record as $key => $value) {
-                $options["items"][] = array('id' => $value->code, 'name' => $value->description);
+                $options["items"][] = array('id' => $value->id, 'name' => $value->description);
                 unset($options["incomplete_results"]);
                 unset($options["total_count"]);
             }
@@ -136,7 +136,12 @@ class HomeController extends Controller
                 $where[] = array("code", "=", $data['id']);
                 $record = DB::table('departments')->where($where)->get();
                 $return = array('desc' => $record[0]->description, 'id' => $record[0]->id);
+            } elseif ($data['desc'] == "schedule") {
+                $where[] = array("id", "=", $data['id']);
+                $record = DB::table('schedules')->where($where)->get();
+                $return = array('desc' => $record[0]->description, 'id' => $record[0]->id);
             }
+            
         }
         
 

@@ -30,8 +30,8 @@ class BatchScheduleController extends Controller
 
         // get user creator
         foreach ($data['result'] as $key => $value) {
-            $data['result'][$key]->office = DB::table('offices')->where('id', $value->office)->value('description');
-            $data['result'][$key]->department = DB::table('departments')->where('id', $value->department)->value('description');
+            $data['result'][$key]->office = DB::table('offices')->where('code', $value->office)->value('description');
+            $data['result'][$key]->department = DB::table('departments')->where('code', $value->department)->value('description');
             $data['result'][$key]->modified_by = DB::table('users')->where('id', $value->modified_by)->value('name');
             $data['result'][$key]->created_by = DB::table('users')->where('id', $value->created_by)->value('name');
         }
@@ -82,10 +82,14 @@ class BatchScheduleController extends Controller
             $number[] = str_replace("+63", "0", $value->contact);
             DB::table("schedules_detail_employee")->where('employee_id', '=', $value->employee_id)->delete();
             $schedData = DB::table("schedules_detail")->where("sched_id", $formFields['sched_id'])->get();
+            // dd($schedData);
             foreach ($schedData as $sch => $schedValue) {
                 unset($schedData[$sch]->id);
+                unset($schedData[$sch]->sched_id);
+                unset($schedData[$sch]->hours);
                 $schedData[$sch]->employee_id = $value->employee_id;
             }
+            
             // Convert TO array
             $schedData = json_decode(json_encode($schedData), true);
             DB::table('schedules_detail_employee')->insert($schedData);
@@ -121,14 +125,14 @@ class BatchScheduleController extends Controller
             unset($formFields['uid']);
             $formFields['created_by'] = Auth::id();
             BatchSchedule::create($formFields);
-            $return = array('status' => 1, 'msg' => 'Successfully added schedule to '.$employeeCount.' student.', 'title' => 'Success!');
+            $return = array('status' => 1, 'msg' => 'Successfully added schedule to '.$employeeCount.' employee.', 'title' => 'Success!');
         } else {
             $formFields['updated_at'] = Carbon::now();
             $formFields['modified_by'] = Auth::id();
             $id = $formFields['uid'];
             unset($formFields['uid']);
             DB::table("batch_schedules")->where('id', $id)->update($formFields);
-            $return = array('status' => 1, 'msg' => 'Successfully updated schedule to ' . $employeeCount . ' student.', 'title' => 'Success!');
+            $return = array('status' => 1, 'msg' => 'Successfully updated schedule to ' . $employeeCount . ' employee.', 'title' => 'Success!');
         }
 
         return response()->json($return);

@@ -57,7 +57,8 @@
     $(document).ready(function () {
         
         $('.select-predefined').each(function (index, element) {
-            if($(this).val()){
+            console.log($(this).val());
+            if($(this).attr("data-value")){
                 var item = $(element);
                 if (item.data('url')) {
                     CustomInitSelect2(item, {
