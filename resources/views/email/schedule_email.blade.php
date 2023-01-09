@@ -13,7 +13,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>STI SCHEDULE MAKER</title>
+        <title>HR</title>
         
     <style type="text/css">
 		p{
@@ -574,7 +574,7 @@
                     <td class="mcnCaptionLeftImageContent" align="center" valign="top">
                     
                         
-                        <img alt="" src="https://mcusercontent.com/6e3565a08d78ae55ef0e6bebf/images/4774c783-f25a-2e40-e09b-b37871e16772.png" width="264" style="max-width: 511px; border-radius: 0%;" class="mcnImage">
+                        <img alt="" src="https://mcusercontent.com/6e3565a08d78ae55ef0e6bebf/images/6ce61250-eaab-445d-0b66-4d32fd033aaf.png" width="264" style="max-width: 667px; border-radius: 0%;" class="mcnImage">
                         
                     
                     </td>
@@ -586,7 +586,7 @@
                         <div style="text-align: center;"><br>
 <br>
 <br>
-<font face="arial, helvetica neue, helvetica, sans-serif"><span style="font-size:32px"><strong>Student Schedule Information</strong></span></font><br>
+<font face="arial, helvetica neue, helvetica, sans-serif"><span style="font-size:32px"><strong>Schedule Information</strong></span></font><br>
 &nbsp;</div>
 
                     </td>
@@ -623,7 +623,7 @@
                             <h2 class="mc-toc-title" style="text-align: left;"><br>
 <strong><span style="font-size:12px">Hello Good Day,&nbsp;<br>
 <br>
-You have been assigned a new schedule please check your schedule tab in your profile in the scheduling system.<br>
+You have been assigned a new schedule please check your schedule tab in your profile in the system.<br>
 <br>
 &nbsp;</h2>
 

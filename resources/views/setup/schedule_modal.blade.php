@@ -147,7 +147,7 @@
         $("input[name='fromtime'],input[name='totime'],input[name='tardy'],input[name='absent']").tempusDominus({
             localization: {
             locale: 'en-US',
-            format: 'HH:mm T',
+            format: 'hh:mm T',
             },
             display: {
                 viewMode: 'clock',
@@ -179,19 +179,29 @@
         
         var hasconflict = 0;
         var last_trcode = "";
+        var periods = [];
+
         $("#schedule").find("tr[tag='grp']").each(function(){
             var ftime = $(this).find("input[name='fromtime']:first").val();
             var totime = $(this).find("input[name='totime']:first").val();
-            var tardy = $(this).find("input[name='tardy']:first").val();
-            var absent = $(this).find("input[name='absent']:first").val();
-            if(last_trcode != $(this).attr("dayofweek")){
+            if(last_trcode == $(this).attr("dayofweek")){
+                const AnotherPeriod = [{start:toHoursMins(ftime), end:toHoursMins(totime)}];
+                periods = periods.concat(AnotherPeriod);
+            }else{
+                var TimeChecker = timeOverlapChecker(periods);
+                if(TimeChecker){
+                    hasconflict++;
+                }
                 if(ftime == totime && ftime && totime){
                     hasconflict++;
                 }
+                periods = [];
+                const AnotherPeriod = [{start:toHoursMins(ftime), end:toHoursMins(totime)}];
+                periods = periods.concat(AnotherPeriod);
             }
-            var last_trcode = $(this).attr("dayofweek");
+            last_trcode = $(this).attr("dayofweek");
         });
-        
+
         if(hasconflict>0){
             Swal.fire({
                 icon: 'warning',
@@ -201,7 +211,7 @@
                 timer: 1000
             });
             return;
-        } 
+        }
         
         bootstrapForm($("#scheduleForm"));
         
@@ -406,8 +416,15 @@
         $(obj).find("td:eq(5)").find("div:first").append($(absent_picker));
         
         $(obj).find("input[name='fromtime'],input[name='totime'],input[name='tardy'],input[name='absent").tempusDominus({
+            localization: {
+            locale: 'en-US',
+            format: 'hh:mm T',
+            },
             display: {
                 viewMode: 'clock',
+                buttons: {
+                    close: true,
+                },
                 components: {
                     decades: false,
                     year: false,

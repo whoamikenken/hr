@@ -35,27 +35,8 @@ class MailNotify extends Mailable
     {
         $from = env('MAIL_FROM_ADDRESS');
 
-        if ($this->data['emailtype'] == "applicant_document") {
-            $this->data['fullname'] = $this->data['attachment'][0]->fullname;
-            unset($this->data['attachment'][0]->fullname);
-            $this->from($from, $this->data['from_title'])->subject($this->data['subject'])->view("email.status_email", $this->data);
-            foreach ($this->data['attachment'][0] as $file => $val) {
-                if ($val) {
-
-                    $fileDesc = Extras::showDesc($file);
-
-                    $getMime = explode(".", $val);
-
-                    $getMime = $getMime[1];
-                    // dd();
-                    $this->attach(Attachment::fromPath(Storage::disk('s3')->url($val))->as($fileDesc . "." . $getMime));
-                }
-            }
-
-            return $this;
-        } elseif ($this->data['emailtype'] == "claim_notification") {
-            // dd($this->data);
-            return $this->from($from, $this->data['from_title'])->subject($this->data['subject'])->view("email.claim_email")->with('data', $this->data);
+        if ($this->data['emailtype'] == "notify") {
+            return $this->from($from, $this->data['from_title'])->subject($this->data['subject'])->view("email.schedule_email")->with('data', $this->data);
         }
     }
 }

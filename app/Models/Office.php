@@ -12,6 +12,7 @@ class Office extends Model
         'code',
         'description',
         'department',
+        'head_id',
         'color',
     ];
 }

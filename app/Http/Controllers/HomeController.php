@@ -69,80 +69,52 @@ class HomeController extends Controller
         $where = array();
         $mode = $data['mode'];
         $limit = 100;
+        if (isset($mode) && $mode == "single") {
+            $options["items"][] = array('id' => "", 'name' => "Select Option");
+        } else {
+            $options["items"][] = array('id' => "all", 'name' => "All");
+        }
         $options = array("incomplete_results" => false, "items" => array(), "total_count" => 0);
-        if($data['dataSearch'] == "subject"){
-            if(!isset($data['search'])) $data['search'] = "";
-            $where[] = array("course_desc", "LIKE", "%".$data['search']."%");
-            $record = DB::table('subjects')->select(DB::raw('id, course_desc as `desc`, units'))->where($where)->limit($limit)->get();
-            if (isset($mode) && $mode == "single") {
-                $options["items"][] = array('id' => "", 'name' => "Select Option");
-            } else {
-                $options["items"][] = array('id' => "all", 'name' => "All");
-            }
-            foreach ($record as $key => $value) {
-                $options["items"][] = array('id' => $value->id, 'name' => $value->desc,'units' => $value->units);
-                unset($options["incomplete_results"]);
-                unset($options["total_count"]);
-            }
-        }elseif ($data['dataSearch'] == "prof") {
+        if ($data['dataSearch'] == "user") {
             if (!isset($data['search'])) $data['search'] = "";
+            $where[] = array("user_type", "=", "Employee");
             $where[] = array("name", "LIKE", "%" . $data['search'] . "%");
-            $where[] = array("user_type", "=", "Professor");
             $record = DB::table('users')->where($where)->limit($limit)->get();
-            if (isset($mode) && $mode == "single") {
-                $options["items"][] = array('id' => "", 'name' => "Select Option");
-            } else {
-                $options["items"][] = array('id' => "all", 'name' => "All");
-            }
             foreach ($record as $key => $value) {
-                $options["items"][] = array('id' => $value->id, 'name' => $value->name);
+                $options["items"][] = array('id' => $value->id, 'name' => $value->username . " - " . $value->name);
                 unset($options["incomplete_results"]);
                 unset($options["total_count"]);
             }
-        } elseif ($data['dataSearch'] == "course") {
+        } elseif ($data['dataSearch'] == "office") {
             if (!isset($data['search'])) $data['search'] = "";
             $where[] = array("description", "LIKE", "%" . $data['search'] . "%");
-            $record = DB::table('courses')->where($where)->limit($limit)->get();
-            if (isset($mode) && $mode == "single") {
-                $options["items"][] = array('id' => "", 'name' => "Select Option");
-            } else {
-                $options["items"][] = array('id' => "all", 'name' => "All");
-            }
+            $record = DB::table('offices')->where($where)->limit($limit)->get();
             foreach ($record as $key => $value) {
                 $options["items"][] = array('id' => $value->code, 'name' => $value->description);
                 unset($options["incomplete_results"]);
                 unset($options["total_count"]);
             }
-        } elseif ($data['dataSearch'] == "yl") {
+        } elseif ($data['dataSearch'] == "department") {
             if (!isset($data['search'])) $data['search'] = "";
             $where[] = array("description", "LIKE", "%" . $data['search'] . "%");
-            $record = DB::table('yearlevels')->where($where)->limit($limit)->get();
-            if (isset($mode) && $mode == "single") {
-                $options["items"][] = array('id' => "", 'name' => "Select Option");
-            } else {
-                $options["items"][] = array('id' => "all", 'name' => "All");
-            }
+            $record = DB::table('departments')->where($where)->limit($limit)->get();
             foreach ($record as $key => $value) {
                 $options["items"][] = array('id' => $value->code, 'name' => $value->description);
                 unset($options["incomplete_results"]);
                 unset($options["total_count"]);
             }
-        } elseif ($data['dataSearch'] == "section") {
+        } elseif ($data['dataSearch'] == "schedule") {
             if (!isset($data['search'])) $data['search'] = "";
             $where[] = array("description", "LIKE", "%" . $data['search'] . "%");
-            $record = DB::table('sections')->where($where)->limit($limit)->get();
-            if (isset($mode) && $mode == "single") {
-                $options["items"][] = array('id' => "", 'name' => "Select Option");
-            } else {
-                $options["items"][] = array('id' => "all", 'name' => "All");
-            }
+            $record = DB::table('schedules')->where($where)->limit($limit)->get();
             foreach ($record as $key => $value) {
                 $options["items"][] = array('id' => $value->code, 'name' => $value->description);
                 unset($options["incomplete_results"]);
                 unset($options["total_count"]);
             }
         }
-
+        
+        
         echo json_encode($options);
     }
 
@@ -152,27 +124,18 @@ class HomeController extends Controller
         $where = array();
         $return = array();
         if($data['id'] && isset($data['id'])){
-            if ($data['desc'] == "subject") {
-                $where[] = array("id", "=", $data['id']);
-                $record = DB::table('subjects')->select(DB::raw('id, course_desc as `desc`, units'))->where($where)->get();
-                $return = array('desc' => $record[0]->desc, 'id' => $record[0]->id, 'units' => $record[0]->units);
-            } elseif ($data['desc'] == "prof") {
-                $where[] = array("user_type", "=", "Professor");
+            if ($data['desc'] == "user") {
                 $where[] = array("id", "=", $data['id']);
                 $record = DB::table('users')->where($where)->get();
-                $return = array('desc' => $record[0]->name, 'id' => $record[0]->id);
-            } elseif ($data['desc'] == "course") {
+                $return = array('desc' => $record[0]->username." - ".$record[0]->name, 'id' => $record[0]->id);
+            } elseif ($data['desc'] == "office") {
                 $where[] = array("code", "=", $data['id']);
-                $record = DB::table('courses')->where($where)->get();
-                $return = array('desc' => $record[0]->description, 'id' => $record[0]->code);
-            } elseif ($data['desc'] == "yl") {
+                $record = DB::table('offices')->where($where)->get();
+                $return = array('desc' => $record[0]->description, 'id' => $record[0]->id);
+            } elseif ($data['desc'] == "department") {
                 $where[] = array("code", "=", $data['id']);
-                $record = DB::table('yearlevels')->where($where)->get();
-                $return = array('desc' => $record[0]->description, 'id' => $record[0]->code);
-            } elseif ($data['desc'] == "section") {
-                $where[] = array("code", "=", $data['id']);
-                $record = DB::table('sections')->where($where)->get();
-                $return = array('desc' => $record[0]->description, 'id' => $record[0]->code);
+                $record = DB::table('departments')->where($where)->get();
+                $return = array('desc' => $record[0]->description, 'id' => $record[0]->id);
             }
         }
         

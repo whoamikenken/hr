@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Models\Extras;
+use App\Jobs\SendEmail;
 use App\Mail\MailNotify;
 use App\Models\Tablecolumn;
 use Illuminate\Http\Request;
@@ -29,7 +30,8 @@ class BatchScheduleController extends Controller
 
         // get user creator
         foreach ($data['result'] as $key => $value) {
-
+            $data['result'][$key]->office = DB::table('offices')->where('id', $value->office)->value('description');
+            $data['result'][$key]->department = DB::table('departments')->where('id', $value->department)->value('description');
             $data['result'][$key]->modified_by = DB::table('users')->where('id', $value->modified_by)->value('name');
             $data['result'][$key]->created_by = DB::table('users')->where('id', $value->created_by)->value('name');
         }
@@ -54,11 +56,6 @@ class BatchScheduleController extends Controller
         }
 
         $data['uid'] = $formFields['uid'];
-        $data['sched_select'] = DB::table("schedules")->get();
-        $data['course_select'] = DB::table("courses")->get();
-        $data['campus_select'] = DB::table("campuses")->get();
-        $data['yearlevel_select'] = DB::table("yearlevels")->get();
-        // dd($data);
         return view('setup/batchscheduling_modal', $data);
     }
 
@@ -69,43 +66,43 @@ class BatchScheduleController extends Controller
         $formFields = $request->validate([
             'uid' => ['required'],
             'sched_id' => ['required'],
-            'yearlevel' => ['required'],
-            'course' => ['required'],
-            'campus' => ['required'],
-            'section' => ['required']
+            'office' => ['required'],
+            'department' => ['required']
         ]);
         // DB::enableQueryLog();
-        $studentList = DB::table("students")->where("section", $formFields['section'])->where("year_level", $formFields['yearlevel'])->where("course", $formFields['course'])->where("campus", $formFields['campus'])->get();
+        $employeeList = DB::table("employees")->where("office", $formFields['office'])->where("department", $formFields['department'])->get();
+        // dd($employeeList);
         $email = array();
         $number = array();
-        $studentCount = 0;
-        // dd($studentList);
-        foreach ($studentList as $key => $value) {
-            $studentCount++;
+        $employeeCount = 0;
+        // dd($employeeList);
+        foreach ($employeeList as $key => $value) {
+            $employeeCount++;
             $email[] = $value->email;
             $number[] = str_replace("+63", "0", $value->contact);
-            DB::table("schedules_detail_student")->where('student_id', '=', $value->student_id)->delete();
-            $schedData = DB::table("schedules_detail")->where("section", $formFields['section'])->get();
+            DB::table("schedules_detail_employee")->where('employee_id', '=', $value->employee_id)->delete();
+            $schedData = DB::table("schedules_detail")->where("sched_id", $formFields['sched_id'])->get();
             foreach ($schedData as $sch => $schedValue) {
                 unset($schedData[$sch]->id);
-                $schedData[$sch]->student_id = $value->student_id;
+                $schedData[$sch]->employee_id = $value->employee_id;
             }
             // Convert TO array
             $schedData = json_decode(json_encode($schedData), true);
-            DB::table('schedules_detail_student')->insert($schedData);
+            DB::table('schedules_detail_employee')->insert($schedData);
             
         }
 
-        $data = array(
+        $dataEmail = array(
+            'emailtype' => "notify",
             'subject' => "New Schedule",
-            'emailtype' => "notify"
+            'email' => $email,
+            'from_title' => "HR",
         );
 
         try {
-            Mail::to($email)->send(new MailNotify($data));
-            response()->json(['Check your mail']);
+            SendEmail::dispatch($dataEmail);
         } catch (Exception $th) {
-            response()->json(['Something Went Wrong']);
+            dump($th);
         }
 
         $dataSMS = array(
@@ -118,20 +115,20 @@ class BatchScheduleController extends Controller
 
         $reponse = Extras::sendRequest("http://122.54.191.90:8085/goip_send_sms.html", "get", $dataSMS);
         
-        $formFields['student_count'] = $studentCount;
+        $formFields['employee_count'] = $employeeCount;
 
         if ($formFields['uid'] == "add") {
             unset($formFields['uid']);
             $formFields['created_by'] = Auth::id();
             BatchSchedule::create($formFields);
-            $return = array('status' => 1, 'msg' => 'Successfully added schedule to '.$studentCount.' student.', 'title' => 'Success!');
+            $return = array('status' => 1, 'msg' => 'Successfully added schedule to '.$employeeCount.' student.', 'title' => 'Success!');
         } else {
             $formFields['updated_at'] = Carbon::now();
             $formFields['modified_by'] = Auth::id();
             $id = $formFields['uid'];
             unset($formFields['uid']);
             DB::table("batch_schedules")->where('id', $id)->update($formFields);
-            $return = array('status' => 1, 'msg' => 'Successfully updated schedule to ' . $studentCount . ' student.', 'title' => 'Success!');
+            $return = array('status' => 1, 'msg' => 'Successfully updated schedule to ' . $employeeCount . ' student.', 'title' => 'Success!');
         }
 
         return response()->json($return);

@@ -16,12 +16,9 @@ return new class extends Migration
         Schema::create('batch_schedules', function (Blueprint $table) {
             $table->id();
             $table->string('sched_id', 30)->nullable();
-            $table->string('campus', 30)->nullable();
-            $table->string('adviser', 30)->nullable();
-            $table->string('yearlevel', 30)->nullable();
-            $table->string('course', 30)->nullable();
-            $table->string('section', 30)->nullable();
-            $table->string('student_count', 30)->nullable();
+            $table->string('office', 30)->nullable();
+            $table->string('department', 30)->nullable();
+            $table->string('employee_count', 30)->nullable();
             $table->timestamp('updated_at')->nullable()->useCurrent();
             $table->string('modified_by', 30)->nullable();
             $table->timestamp('created_at')->nullable()->useCurrent();

@@ -50,6 +50,22 @@
         </div>
     </div>
 
+    <div class="col-md-6 col-sm-12">
+        <label>Office Head<span class="text-danger">*</span></label>
+        <div class="input-group">
+            <div class="input-group-text"><i class="bi bi-pencil-fill"></i></div>
+            <select class="head_id-select head_id select-predefined" name="head_id" placeholder="Select Options" data-value="{{ (isset($head_id))? $head_id:''}}" data-url="{{ url('getDropdown/dropdownInit') }}" data-table="user"> 
+                            <option value="">Select Head</option>
+                        </select>
+            <div class="valid-feedback">
+                Looks good!
+            </div>
+            <div class="invalid-feedback">
+                Please input a Department.
+            </div>
+        </div>
+    </div>
+
     
     <div class="col-md-6 col-sm-12">
         <label>Color<span class="text-danger">*</span></label>
@@ -68,6 +84,55 @@
 </form>
 
 <script>
+
+    $(document).ready(function () {
+
+        $('.select-predefined').each(function (index, element) {
+            var item = $(element);
+            if (item.data('url')) {
+                CustomInitSelect2(item, {
+                    url: item.data('url'),
+                    table: item.data('table'),
+                    desc: item.data('desc'),
+                    initialValue: item.data('value')
+                });
+            }
+        });
+    });
+
+    $('.head_id-select').select2({
+        theme: 'bootstrap-5',
+        dropdownParent: $('#modal-view'),
+        ajax: {
+            placeholder: 'Search User',
+            allowClear: true,
+            type : "POST",
+            data:function (params) {
+                var query = {
+                    search: params.term,
+                    dataSearch:"user",
+                    mode:"single",
+                }
+                return query;
+            },
+            async: false,
+            url: "{{ url('getDropdown/dropdown') }}",
+            dataType: 'json',
+            delay: 500,
+            minimumInputLength: 1,
+            processResults: function (data) {
+                return {
+                    results: $.map(data.items, function (item) {
+                        return {
+                            text: item.name,
+                            units: item.units,
+                            id: item.id
+                        }
+                    })
+                };
+            }
+        }
+    });
     
     $("#saveModal").unbind("click").click(function() {
         bootstrapForm($("#officeForm"));

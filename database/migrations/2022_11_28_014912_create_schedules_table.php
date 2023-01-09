@@ -33,7 +33,7 @@ return new class extends Migration
         Schema::create('schedules_detail', function (Blueprint $table) {
             $table->id();
             // $table->unsignedBigInteger('schedid');
-            $table->foreignId('schedid')
+            $table->foreignId('sched_id')
             ->constrained('schedules')
             ->onDelete('cascade');
             $table->time('starttime', $precision = 0)->nullable();

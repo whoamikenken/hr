@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -17,16 +19,38 @@ class EmployeeFactory extends Factory
      */
     public function definition()
     {
-        $firstName = fake()->firstName();
         $gender = fake()->randomElement(['Male', 'Female']);
+        $firstName = fake()->firstName();
+        $middleName = fake()->lastName($gender);
+        $lastName = fake()->lastName($gender);
+        $employeeID = fake()->randomNumber(2, false) . "-" . fake()->randomNumber(4, false);
+        $email = fake()->freeEmail();
+
+        User::factory()->create([
+            'username' => $employeeID,
+            'name' => $firstName." ". $middleName." ".$lastName,
+            'fname' => $firstName,
+            'lname' => $lastName,
+            'email' => $email,
+            'user_type' => 'Employee',
+            'status' => 'verified',
+            'email_verified_at' => now(),
+            'password' => bcrypt('a'), // password
+            'read' => "1,2,3,803,804,8,9,10,11,12,6,7",
+            'add' => "1,2,3,4,7,8,9,10,11,14,15,16,12",
+            'delete' => "1,2,3,4,7,8,9,10,11,14,15,16,12",
+            'edit' => "1,2,3,803,804,8,9,10,11,12,6,7",
+            'remember_token' => Str::random(10)
+        ]);
+
         return [
-            'employee_id' => fake()->randomNumber(2, false)."-".fake()->randomNumber(4, false),
+            'employee_id' => $employeeID,
             'employee_code' => fake()->randomNumber(6, false),
             'fname' => $firstName,
-            'lname' => fake()->lastName($gender),
-            'mname' => fake()->lastName($gender),
+            'lname' => $middleName,
+            'mname' => $lastName,
             'contact' => "+639" . fake()->randomNumber(9, true),
-            'email' => fake()->freeEmail(),
+            'email' => $email,
             'age' => fake()->randomNumber(2, false),
             'address' => fake()->streetAddress() . " " . fake()->cityPrefix(),
             'family_contact_name' => fake()->firstName($gender) . " " . fake()->lastName($gender),

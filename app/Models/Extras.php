@@ -491,4 +491,10 @@ class Extras extends Model
         //Return rgb(a) color string
         return $output;
     }
+
+    public static function getUserForDropdown($where)
+    {
+        $data = DB::table('budgets')->where($where)->get();
+        return $data;
+    }
 }

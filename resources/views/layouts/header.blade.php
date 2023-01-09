@@ -651,17 +651,41 @@ $mainmenu = 1;
                 data:{id:options.initialValue, desc:options.table},
                 dataType: 'json'
             }).then(function (data) {
-                // console.log(data);
-                // if(typeof data.units !== 'undefined'){
                     var option = new Option(data.desc, data.id, true, true);
                     element.append(option);
                     if(typeof data.units !== 'undefined'){
                         element.parent().parent().parent().find(".units").val(units);
                     }
                     element.trigger('change');
-                // } 
             });
         }
+    }
+
+    // compares the hours and minutes of the start and end times of each period using additional conditions. 
+    function timeOverlapChecker(periods) {
+       for (let i = 0; i < periods.length - 1; i++) {
+            for (let j = i + 1; j < periods.length; j++) {
+            if (periods[i].start.hours < periods[j].end.hours ||
+                (periods[i].start.minutes < periods[j].end.minutes)) {
+                if (periods[i].end.hours > periods[j].start.hours ||
+                    (periods[i].end.minutes > periods[j].start.minutes)) {
+                return true;  // overlap found
+                }
+            }
+            }
+        }
+        return false;  // no overlap found
+    }
+
+
+    // This function uses the split method to extract the hours and minutes and the AM/PM indicator from the input string, and then uses the parseInt function to parse the hours and minutes into integers. It also converts the hours to a 24-hour format by adding 12 if the AM/PM indicator is "PM".
+    function toHoursMins(time) {
+        const [hoursMins, amPm] = time.split(' ');
+        const [hours, minutes] = hoursMins.split(':');
+        return {
+            hours: parseInt(hours, 10) + (amPm === 'PM' ? 12 : 0),
+            minutes: parseInt(minutes, 10),
+        };
     }
 </script>
 </html>
