@@ -14,6 +14,10 @@ class Usertype extends Model
     protected $fillable = [
         'code',
         'description',
+        'read',
+        'add',
+        'delete',
+        'edit',
         'created_by'
     ];
 }

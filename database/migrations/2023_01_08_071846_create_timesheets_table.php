@@ -18,8 +18,8 @@ return new class extends Migration
         Schema::create('timesheets_trail', function (Blueprint $table) {
             $table->id();
             $table->string('employee_id', 20)->nullable();
-            $table->string('log_time', 100)->nullable();
-            $table->string('local_time', 100)->nullable();
+            $table->dateTime('log_time', $precision = 0)->nullable();
+            $table->string('local_time')->nullable();
             $table->string('log_type', 100)->nullable()->default('IN');
             $table->string('username', 100)->nullable();
             $table->string('ip', 100)->nullable();
@@ -33,8 +33,8 @@ return new class extends Migration
         Schema::create('timesheets', function (Blueprint $table) {
             $table->id();
             $table->string('employee_id', 20)->nullable();
-            $table->string('time_in', 100)->nullable();
-            $table->string('time_out', 100)->nullable();
+            $table->dateTime('time_in', $precision = 0)->nullable();
+            $table->dateTime('time_out', $precision = 0)->nullable();
             $table->string('machine_in', 100)->nullable();
             $table->string('machine_out', 100)->nullable();
             $table->string('ip_in', 100)->nullable();

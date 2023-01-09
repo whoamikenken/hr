@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use DateTime;
 use Exception;
+use DatePeriod;
+use DateInterval;
 use App\Models\User;
 use App\Models\Extras;
 use App\Mail\MailNotify;
@@ -282,6 +285,69 @@ class EmployeeController extends Controller
         $return = array('status' => 1, 'msg' => 'Successfully added applicant', 'title' => 'Success!');
 
         return response()->json($return);
+    }
+
+    public function attendance(Request $request)
+    {
+
+        $Events = array();
+    
+        $dateTo = date("Y-m-d", strtotime($request->input("start")));
+        $dateFrom = date("Y-m-d", strtotime($request->input("end")));
+
+        $employeeid = Auth::user()->username;
+
+        $begin = new DateTime($dateTo);
+        $end = new DateTime($dateFrom);
+        $begin = $begin->modify('+1 day');
+        $end = $end->modify('+1 day');
+
+        $interval = DateInterval::createFromDateString('1 day');
+        $period = new DatePeriod($begin, $interval, $end);
+        foreach ($period as $dt) {
+            $date = $dt->format("Y-m-d");
+            if($date <= date("Y-m-d")){
+                $query = DB::table('timesheets');
+                $query->where("employee_id", $employeeid);
+                $query->where(DB::raw('date(time_in)'), $date);
+                $query->orderBy('time_in', 'desc');
+
+                $result = $query->get();
+                if (count($result) > 0) {
+                    foreach ($result as $ky => $value) {
+                        $data = array();
+                        $title = Extras::AttendanceDescriptionCheckerIfLate($employeeid, $value->time_in);
+                        $color = "#0172c6";
+                        if ($title == "Late") {
+                            $color = "#ffc700";
+                        }
+                        $data['title'] = $title;
+                        $data['start'] = $value->time_in;
+                        $data['end'] = $value->time_out;
+                        $data['eventStartEditable'] = false;
+                        $data['color'] = $color;
+                        $Events[] = $data;
+                    }
+                } else {
+                    $idx = date("N", strtotime($date));
+                    // Get Schedule Data
+                    $startTime = DB::table('schedules_detail_employee')->where('employee_id', $employeeid)->where('idx', $idx)->orderBy("starttime", "ASC")->value('starttime');
+
+                    if ($startTime) {
+                        $endTime = DB::table('schedules_detail_employee')->where('employee_id', $employeeid)->where('idx', $idx)->orderBy("endtime", "DESC")->value('endtime');
+                        $color = "#cc1712";
+                        $data['title'] = "Absent";
+                        $data['start'] = $date . " " . $startTime;
+                        $data['end'] = $date . " " . $endTime;
+                        $data['eventStartEditable'] = false;
+                        $data['color'] = $color;
+                        $Events[] = $data;
+                    }
+                }
+            }
+        }
+
+        return response()->json($Events);
     }
 
     public function updateEmployeeData(Request $request)

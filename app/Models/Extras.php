@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use DateTime;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Model;
@@ -322,17 +323,17 @@ class Extras extends Model
 
     public static function getNoAdd()
     {
-        return array(999, 13, 5, 801, 802, 803, 804);
+        return array(999, 13, 14, 1, 5, 801, 802, 803, 804);
     }
 
     public static function getNoDel()
     {
-        return array(999, 13, 5, 801, 802, 803, 804);
+        return array(999, 13, 14, 1, 5, 801, 802, 803, 804);
     }
 
     public static function getNoEdit()
     {
-        return array(5,999);
+        return array(5,999,1,13,14);
     }
 
     public static function requestToEmpsys($link, $type = 'get', $data = null, $token = null){
@@ -496,5 +497,31 @@ class Extras extends Model
     {
         $data = DB::table('budgets')->where($where)->get();
         return $data;
+    }
+
+
+    public static function AttendanceDescriptionCheckerIfLate($employeeid, $date)
+    {
+        $idx = date("N", strtotime($date));
+        $Day = date("Y-m-d", strtotime($date));
+
+        $datetime = new DateTime($date);
+
+        $startTime = DB::table('schedules_detail_employee')->where('employee_id', $employeeid)->where('idx', $idx)->value('starttime');
+
+        if($startTime){
+            $startTime = new DateTime($Day . " " . $startTime);
+            
+            if ($startTime > $datetime || $startTime->format('i') == $datetime->format('i')) {
+                // The datetime is in the future
+                $result = "On time";
+            } elseif ($startTime < $datetime) {
+                // The datetime is in the past
+                $result = "Late";
+            } 
+        }else{
+            $result = "No Schedule";
+        }
+        return $result;
     }
 }

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\Extras;
-use App\Models\usertype;
+use App\Models\Usertype;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -56,18 +56,15 @@ class UsertypeController extends Controller
         $menus = Extras::getMenusList();
         $access = array();
         $access["Main"][] = array('root_id' => 0, "menu_id" => 1, "title" => "Dashboard");
-        $access["Main"][] = array('root_id' => 0, "menu_id" => 2, "title" => "Student List");
+        $access["Main"][] = array('root_id' => 0, "menu_id" => 2, "title" => "Employee List");
         $access["Main"][] = array('root_id' => 0, "menu_id" => 3, "title" => "User Management");
-        $access["Main"][] = array('root_id' => 0, "menu_id" => 4, "title" => "Applicant List");
+        $access["Main"][] = array('root_id' => 0, "menu_id" => 13, "title" => "My Profile");
+        $access["Main"][] = array('root_id' => 0, "menu_id" => 14, "title" => "My Attendance");
         foreach ($menus as $key => $value) {
             $getSubmenus = Extras::getSubMenus($value->menu_id);
-            if ($value->menu_id == 4) {
-                $access["Applicant Management"][] = array('root_id' => 888, "menu_id" => 801, "title" => "Profile");
-            }
-
             if ($value->menu_id == 2) {
-                $access["Student Management"][] = array('root_id' => 888, "menu_id" => 803, "title" => "Profile");
-                $access["Student Management"][] = array('root_id' => 888, "menu_id" => 804, "title" => "Schedule");
+                $access["Employee Management"][] = array('root_id' => 888, "menu_id" => 803, "title" => "Profile");
+                $access["Employee Management"][] = array('root_id' => 888, "menu_id" => 804, "title" => "Schedule");
             }
             foreach ($getSubmenus as $row => $val) {
                 $access[$value->title][] = array('root_id' => $value->menu_id, "menu_id" => $val->menu_id, "title" => $val->title);
@@ -139,7 +136,7 @@ class UsertypeController extends Controller
             'description' => ['required']
         ]);
         
-        // dd($request->input("edatalistAdd"));
+        
         if ($formFields['uid'] == "add") {
             unset($formFields['uid']);
             $formFields['created_by'] = Auth::id();
@@ -148,7 +145,7 @@ class UsertypeController extends Controller
             $formFields['delete'] = $request->input("edatalistDel");
             $formFields['edit'] = $request->input("edatalistEdit");
             $formFields['updated_at'] = "";
-            usertype::create($formFields);
+            Usertype::create($formFields);
             $return = array('status' => 1, 'msg' => 'Successfully added user type', 'title' => 'Success!');
         } else {
             $formFields['updated_at'] = Carbon::now();
@@ -162,6 +159,14 @@ class UsertypeController extends Controller
             DB::table('usertype')->where('id', $id)->update($formFields);
             $return = array('status' => 1, 'msg' => 'Successfully updated user type', 'title' => 'Success!');
         }
+
+        // Update Other user with same type
+        $userPermission = array();
+        $userPermission['read'] = $formFields['read'];
+        $userPermission['add'] = $formFields['add'];
+        $userPermission['edit'] = $formFields['edit'];
+        $userPermission['delete'] = $formFields['delete'];
+        DB::table('users')->where('user_type', $formFields['code'])->update($userPermission);
 
         return response()->json($return);
     }
