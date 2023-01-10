@@ -16,7 +16,8 @@ RUN apt-get update && apt-get install -y \
     zip \
     libzip-dev \
     libxslt1-dev \
-    unzip
+    unzip \
+    sudo
 
 # Install required PHP extensions
 RUN docker-php-ext-install \
