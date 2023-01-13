@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
@@ -18,11 +19,11 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|string|email',
+            'username' => 'required|string',
             'password' => 'required|string',
         ]);
-        $credentials = $request->only('email', 'password');
-
+        $credentials = $request->only('username', 'password');
+        // dd($credentials);
         $token = Auth::guard('api')->attempt($credentials);
         if (!$token) {
             return response()->json([
@@ -32,13 +33,15 @@ class AuthController extends Controller
         }
 
         $user = Auth::guard('api')->user();
+        $employeeDetail = DB::table('employees')->where("employee_id", $credentials['username'])->get();
+
+
         return response()->json([
             'status' => 'success',
-            'user' => $user,
-            'authorisation' => [
-                'token' => $token,
-                'type' => 'bearer',
-            ]
+            'image' => Storage::disk("s3")->url($employeeDetail[0]->user_profile),
+            'name' => $employeeDetail[0]->fname." ". $employeeDetail[0]->lname,
+            'employee_id' => $employeeDetail[0]->employee_id,
+            'token' => $token
         ]);
     }
 

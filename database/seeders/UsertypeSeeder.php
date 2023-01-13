@@ -26,16 +26,10 @@ class UsertypeSeeder extends Seeder
             'created_by' => 1,
         ]);
 
+    
         Usertype::factory()->create([
-            'code' => 'Student',
-            'description' => 'Student account to create schedule',
-            'modified_by' => 1,
-            'created_by' => 1,
-        ]);
-
-        Usertype::factory()->create([
-            'code' => 'Professor',
-            'description' => 'professor account to approve student schedule request',
+            'code' => 'Employee',
+            'description' => 'Employee Account',
             'modified_by' => 1,
             'created_by' => 1,
         ]);

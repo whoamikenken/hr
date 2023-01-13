@@ -306,7 +306,7 @@ class EmployeeController extends Controller
         $period = new DatePeriod($begin, $interval, $end);
         foreach ($period as $dt) {
             $date = $dt->format("Y-m-d");
-            // if($date <= date("Y-m-d")){
+            if($date <= date("Y-m-d")){
                 $query = DB::table('timesheets');
                 $query->where("employee_id", $employeeid);
                 $query->where(DB::raw('date(time_in)'), $date);
@@ -344,7 +344,7 @@ class EmployeeController extends Controller
                         $Events[] = $data;
                     }
                 }
-            // }
+            }
         }
 
         return response()->json($Events);
