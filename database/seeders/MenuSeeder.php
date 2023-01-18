@@ -262,7 +262,7 @@ class MenuSeeder extends Seeder
                 return $maxOrder + 1;
             },
             'title' => 'Manage Work Request',
-            'link' => 'ob/ob_manage',
+            'link' => 'wfh/wfh_manage',
             'icon' => 'card-checklist',
             'description' => "List of work requests"
         ]);

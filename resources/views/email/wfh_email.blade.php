@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
     <head>
@@ -13,7 +14,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>STI SCHEDULE MAKER</title>
+        <title>HR</title>
         
     <style type="text/css">
 		p{
@@ -574,7 +575,7 @@
                     <td class="mcnCaptionLeftImageContent" align="center" valign="top">
                     
                         
-                        <img alt="" src="https://mcusercontent.com/6e3565a08d78ae55ef0e6bebf/images/f18d5d71-03ff-d554-7b24-b06019f1b20d.png" width="264" style="max-width: 511px; border-radius: 0%;" class="mcnImage">
+                        <img alt="" src="https://mcusercontent.com/6e3565a08d78ae55ef0e6bebf/images/d5f7934a-9b0b-1e2b-a669-eaab85e4ca50.png" width="264" style="max-width: 667px; border-radius: 0%;" class="mcnImage">
                         
                     
                     </td>
@@ -586,7 +587,9 @@
                         <div style="text-align: center;"><br>
 <br>
 <br>
-<font face="arial, helvetica neue, helvetica, sans-serif"><span style="font-size:32px"><strong>Applicant Status Information</strong></span></font><br>
+<font face="arial, helvetica neue, helvetica, sans-serif"><span style="font-size:32px"><strong>Work Task Request @php
+	echo (isset($data['status']))? "Update":"";
+@endphp</strong></span></font><br>
 &nbsp;</div>
 
                     </td>
@@ -621,12 +624,28 @@
                         <td valign="top" class="mcnTextContent" style="padding: 0px 18px 9px; font-family: Roboto, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 18px; font-style: normal; font-weight: bold;">
                         
                             <h2 class="mc-toc-title" style="text-align: left;"><br>
-<strong><span style="font-size:12px">Hi John Doe,&nbsp;<br>
+<strong><span style="font-size:12px">Hi {{$data['headfullname']}},&nbsp;<br>
+	@if (isset($data['status']))
+		<br>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Your&nbsp;work task request has been updated by the {{$data['fullname']}} and has new status of {{$data['status']}}.</span></strong></h2>
+		<br>
+	@else
+		<br>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;A&nbsp;new work task request please open your account on the system to review the request and approve it.</span></strong></h2>
+		<br>
+	@endif
+@if (!isset($data['status']))
+	Requester name: {{$data['fullname']}}<br>
+	Purpose: {{$data['purpose']}}<br>
+	Date: {{$data['date']}}<br>
+	Work Done: @php
+		echo $data['work_done'];
+	@endphp
+@endif
 <br>
-This is the current status of the applicant you requested<br>
 <br>
-Applicant Name:</span></strong><br>
-&nbsp;</h2>
+<br>
+&nbsp;
 
                         </td>
                     </tr>

@@ -19,7 +19,7 @@
 @foreach ($result as $key => $item)
 @php
     $isread = "";
-    if($item->read_employee == 0){
+    if($item->read_office_head == 0){
         $isread = "#93e3e3";
     }
 
@@ -43,9 +43,9 @@
         @endforeach
         <td>
             <div class="form-check">
-                <input class="form-check-input checker" type="checkbox" value="" id="flexCheckDefault" uid="{{ $item->id }}" {{ ($item->read_employee == 1)? "checked disabled":""; }}>
+                <input class="form-check-input checker" type="checkbox" value="" id="flexCheckDefault" uid="{{ $item->id }}" {{ ($item->read_office_head == 1)? "checked disabled":""; }}>
                 <label class="form-check-label" for="flexCheckDefault">
-                    {{ ($item->read_employee == 1)? "Read":"Mark as read"; }}
+                    {{ ($item->read_office_head == 1)? "Read":"Mark as read"; }}
                 </label>
             </div>
         </td>
@@ -79,14 +79,14 @@
     function markAsRead(uid) {
         
         $.ajax({
-            url: "{{ url('wfh/markAsRead') }}",
+            url: "{{ url('wfh/manage_markAsRead') }}",
             type: "POST",
             data: {uid:uid},
             success: function(response) {
                 if(response.title == "none"){
-                    $("a[menu_id='15']").find(".badge").remove();
+                    $("a[menu_id='16']").find(".badge").remove();
                 }else{
-                    $("a[menu_id='15']").find(".badge").text(response.title);
+                    $("a[menu_id='16']").find(".badge").text(response.title);
                 }
             }
         });

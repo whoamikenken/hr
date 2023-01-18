@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Extras;
+use App\Models\Timesheet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -51,15 +52,55 @@ class AuthController extends Controller
         $log = $request->input();
         $base64 = Extras::fix_base64($log['base_64']);
         $image = base64_decode($base64);
-        // dd($image);
-        $p = Storage::disk('s3')->put("user_profile/".$log['employee_id'].'-'. $log['time'].'.png', $image);
-        dd($p);
-        
+        $dateLog = date("Y-m-d", substr($log['time'], 0, 10));
+        $lastLog = Timesheet::getLastlogs($log['employee_id'], $dateLog);
+        // dd($lastLog);
 
-        DB::table('timesheets_trail_history')->insert([
-            ['machine_type' => json_encode($log)],
-        ]);
-        
+        $timesheetHistoryData = array();
+        $timesheetHistoryData['employee_id'] = $log['employee_id'];
+        $timesheetHistoryData['local_time'] = $log['time'];
+        $timesheetHistoryData['log_time'] = date("Y-m-d H:i:s", substr($log['time'], 0, 10));
+        $timesheetHistoryData['username'] = $log['username'];
+        $timesheetHistoryData['ip'] = $log['ip'];
+        $timesheetHistoryData['location'] = $log['location'];
+        $timesheetHistoryData['machine_type'] = $log['machine_type'];
+        if($lastLog['log_type'] == "new"){
+            $timesheetHistoryData['log_type'] = "IN";
+            $timesheetTrailData = $timesheetHistoryData;
+            DB::table('timesheets_trail')->insert($timesheetTrailData);
+        }elseif($lastLog['log_type'] == "IN"){
+            $timesheetHistoryData['log_type'] = "OUT";
+            $timesheetTrailData = $timesheetHistoryData;
+            $timesheetData = array();
+            $timesheetData['employee_id'] = $log['employee_id'];
+            $timesheetData['time_in'] = $lastLog['log_time'];
+            $timesheetData['time_out'] = $timesheetHistoryData['log_time'];
+            $timesheetData['machine_in'] = $lastLog['machine_type'];
+            $timesheetData['machine_out'] = $timesheetHistoryData['machine_type'];
+            $timesheetData['ip_in'] = $lastLog['ip'];
+            $timesheetData['ip_out'] = $timesheetHistoryData['ip'];
+            $timesheetData['location_in'] = $lastLog['location'];
+            $timesheetData['location_out'] = $timesheetHistoryData['location'];
+            $timesheetData['type'] = $lastLog['machine_type']." - ". $timesheetHistoryData['machine_type'];
+            $timesheetData['username'] = "Webcheckin";
+
+            DB::table('timesheets_trail')->insert($timesheetTrailData);
+            DB::table('timesheets')->insert($timesheetData);
+            DB::table('timesheets_trail')->where('employee_id', '=', $log['employee_id'])->where(DB::raw('date(log_time)'), $dateLog)->delete();
+        }
+        $imageLink = "";
+        $titleImage = "user_logs/" . $log['employee_id'] . '-' . $log['time'] . '.png';
+        $p = Storage::disk('s3')->put($titleImage, $image);
+
+        if ($p) {
+            $imageLink = $titleImage;
+        } else {
+            $imageLink = "none";
+        }
+
+
+        $timesheetHistoryData['image'] = $imageLink;
+        DB::table('timesheets_trail_history')->insert($timesheetHistoryData);
     }
 
     public function register(Request $request)

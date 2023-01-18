@@ -55,12 +55,34 @@
     </div>
     @if (isset($accomplishment_file) && $accomplishment_file != "")
         <div class="col-lg-6 col-sm-12">
-            <label style="font-weight:600">Payment Details</label>
+            <label style="font-weight:600">Work Document Details</label>
             <div class="input-group">
-                <a class="btn btn-info text-white" target="_blank" href="{{  Storage::url($accomplishment_file)}}"><i class="bi bi-eye"></i> View</a>
+                <a class="btn btn-info text-white" target="_blank" href="{{  Storage::disk("s3")->url($accomplishment_file)}}"><i class="bi bi-eye"></i> View</a>
             </div>
         </div>
     @endif
+
+    @if (isset($approver))
+       <div class="col-lg-6 col-sm-12">
+            <label style="font-weight:600">Status</label>
+            <div class="input-group">
+                <div class="input-group-text"><i class="bi bi-person-check"></i></div>
+                <select name="status" id="status" class="form-control form-select">
+                    <option value="">Select Option</option>
+                    <option value="PENDING" {{ (isset($status) && $status == "PENDING")? "selected":"" }} >PENDING</option>
+                    <option value="APPROVE" {{ (isset($status) && $status == "APPROVE")? "selected":"" }} >APPROVE</option>
+                    <option value="DISAPPROVE" {{ (isset($status) && $status == "DISAPPROVE")? "selected":"" }} >DISAPPROVE</option>
+                </select>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+                <div class="invalid-feedback">
+                    Please input.
+                </div>
+            </div>
+        </div> 
+    @endif
+    
 </form>
 
 <script>

@@ -136,6 +136,10 @@ Route::post('/wfh/add', [WorkFromHomeController::class, 'store']);
 Route::post('/wfh/delete', [WorkFromHomeController::class, 'delete']);
 Route::post('/wfh/markAsRead', [WorkFromHomeController::class, 'markRead'])->withoutMiddleware([VerifyCsrfToken::class]);
 
+Route::post('/wfh/manage_table', [WorkFromHomeController::class, 'getTableManage'])->withoutMiddleware([VerifyCsrfToken::class]);
+Route::post('/wfh/manage_markAsRead', [WorkFromHomeController::class, 'markReadManage'])->withoutMiddleware([VerifyCsrfToken::class]);
+Route::post('/wfh/getModalManage', [WorkFromHomeController::class, 'getModalManage'])->withoutMiddleware([VerifyCsrfToken::class]);
+
 // Test Email Function
 Route::get('/applicant/testEmail', [ApplicantController::class, 'testEmail'])->withoutMiddleware([VerifyCsrfToken::class]);
 

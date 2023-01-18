@@ -57,7 +57,10 @@ class HomeController extends Controller
         $data['navSelected'] = ($request->nav) ? $request->nav : 0;
         $data['menuSelected'] = ($request->menu_id) ? $request->menu_id : 1;
         $viewRequest = ($request->route) ? $request->route : "home";
-        
+        $data['isApprover'] = Extras::CheckIfApprover(Auth::user()->username);
+        $data['requestCount'] = DB::table('work_from_homes')->where("office_head", Auth::user()->username)->where("status", "PENDING")->where("read_office_head", 0)->count();
+
+        $data['myRequestCount'] = DB::table('work_from_homes')->where("employee_id", Auth::user()->username)->where("read_employee", 0)->count();
         return view($viewRequest, $data);
     }
 
@@ -93,7 +96,7 @@ class HomeController extends Controller
             $where[] = array("name", "LIKE", "%" . $data['search'] . "%");
             $record = DB::table('users')->where($where)->limit($limit)->get();
             foreach ($record as $key => $value) {
-                $options["items"][] = array('id' => $value->id, 'name' => $value->username . " - " . $value->name);
+                $options["items"][] = array('id' => $value->username, 'name' => $value->username . " - " . $value->name);
                 unset($options["incomplete_results"]);
                 unset($options["total_count"]);
             }
@@ -137,9 +140,9 @@ class HomeController extends Controller
         $return = array();
         if($data['id'] && isset($data['id'])){
             if ($data['desc'] == "user") {
-                $where[] = array("id", "=", $data['id']);
+                $where[] = array("username", "=", $data['id']);
                 $record = DB::table('users')->where($where)->get();
-                $return = array('desc' => $record[0]->username." - ".$record[0]->name, 'id' => $record[0]->id);
+                $return = array('desc' => $record[0]->username." - ".$record[0]->name, 'id' => $record[0]->username);
             } elseif ($data['desc'] == "office") {
                 $where[] = array("code", "=", $data['id']);
                 $record = DB::table('offices')->where($where)->get();

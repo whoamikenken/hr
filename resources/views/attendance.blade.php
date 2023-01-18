@@ -17,14 +17,17 @@
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'timeGridWeek',
+            slotMinTime: '05:00',
+            slotMaxTime: '24:00',
             hiddenDays: [0],
             allDaySlot: false,
             selectOverlap:false,
             selectable: true,
+            expandRows: true,
             selectConstraint: 'businessHours',
             businessHours: {
             daysOfWeek: [ 1, 2, 3, 4,5,6], // Monday - Thursday
-            startTime: '6:00', // a start time (10am in this example)
+            startTime: '5:00', // a start time (10am in this example)
             endTime: '24:00', // an end time (6pm in this example)
             },
             editable: true,

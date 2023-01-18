@@ -37,6 +37,10 @@ class MailNotify extends Mailable
 
         if ($this->data['emailtype'] == "notify") {
             return $this->from($from, $this->data['from_title'])->subject($this->data['subject'])->view("email.schedule_email")->with('data', $this->data);
+        }elseif($this->data['emailtype'] == "wfh_notification"){
+            return $this->from($from, $this->data['from_title'])->subject($this->data['subject'])->view("email.wfh_email")->with('data', $this->data['data'])->attach(Attachment::fromPath(Storage::disk("s3")->url($this->data['data']['accomplishment_file'])));
+        } elseif ($this->data['emailtype'] == "wfh_notification_update") {
+            return $this->from($from, $this->data['from_title'])->subject($this->data['subject'])->view("email.wfh_email")->with('data', $this->data['data']);
         }
     }
 }

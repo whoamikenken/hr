@@ -41,7 +41,6 @@ return new class extends Migration
             $table->string('ip_out', 100)->nullable();
             $table->string('location_in', 250)->nullable();
             $table->string('location_out', 250)->nullable();
-            $table->string('machine_type', 100)->nullable();
             $table->string('type', 100)->nullable();
             $table->string('username', 100)->nullable();
             $table->timestamp('created_at')->nullable()->useCurrent();

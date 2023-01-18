@@ -277,7 +277,18 @@ $mainmenu = 1;
                                 @foreach ($menus as $title => $items)
                                 @if (isset($items->menu_id))
                                 @if (in_array($items->menu_id, $readAccess))
-                                <li class="nav-item d-block d-sm-none"><a class="link-light rounded menuMobile text-decoration-none m-1 p-1 fs-5 {{($menuSelected == $items->menu_id) ? "active":"" }}" menu="{{$items->link}}" nav="{{$mainmenu}}" menu_id="{{$items->menu_id}}" href="#" data-bs-toggle="tooltip" data-bs-placement="right" title="{{$items->description}}"><i class="bi bi-{{$items->icon}}"></i>&nbsp;&nbsp;{{$items->title}}</a></li>
+                                @if ($items->menu_id == 16)
+                                    @if ($isApprover)
+                                        <li class="nav-item d-block d-sm-none"><a class="link-light rounded menuMobile text-decoration-none m-1 p-1 fs-5 {{($menuSelected == $items->menu_id) ? "active":"" }}" menu="{{$items->link}}" nav="{{$mainmenu}}" menu_id="{{$items->menu_id}}" href="#" data-bs-toggle="tooltip" data-bs-placement="right" title="{{$items->description}}"><i class="bi bi-{{$items->icon}}"></i>&nbsp;&nbsp;{{$items->title}}&nbsp;&nbsp;@if ($requestCount > 0)
+                                        <span class="top-0 start-100 translate-middle badge rounded-pill bg-danger animate__wobble animate__tada animate__infinite">
+                                            {{$requestCount}}
+                                        </span>
+                                        @endif</a>
+                                        </li>
+                                    @endif
+                                @else
+                                    <li class="nav-item d-block d-sm-none"><a class="link-light rounded menuMobile text-decoration-none m-1 p-1 fs-5 {{($menuSelected == $items->menu_id) ? "active":"" }}" menu="{{$items->link}}" nav="{{$mainmenu}}" menu_id="{{$items->menu_id}}" href="#" data-bs-toggle="tooltip" data-bs-placement="right" title="{{$items->description}}"><i class="bi bi-{{$items->icon}}"></i>&nbsp;&nbsp;{{$items->title}}</a></li>
+                                @endif
                                 @endif
                                 @else
                                 <li class="mb-1 nav-item d-block d-sm-none">
@@ -335,7 +346,27 @@ $mainmenu = 1;
                         @foreach ($menus as $title => $item)
                         @if (isset($item->menu_id))
                         @if (in_array($item->menu_id, $readAccess))
-                        <li class="m-1 mt-1 mb-1"><a class="link-light rounded menuLink text-decoration-none p-1 fs-5 {{($menuSelected == $item->menu_id) ? "active":"" }}" menu="{{$item->link}}" nav="{{$mainmenu}}" menu_id="{{$item->menu_id}}" href="#" data-bs-toggle="tooltip" data-bs-placement="right" title="{{$item->description}}"><i class="bi bi-{{$item->icon}}"></i>&nbsp;&nbsp;{{$item->title}}</a></li>
+                        @if ($item->menu_id == 16)
+                            @if ($isApprover)
+                                <li class="m-1 mt-1 mb-1"><a class="link-light rounded menuLink text-decoration-none p-1 fs-5 {{($menuSelected == $item->menu_id) ? "active":"" }}" menu="{{$item->link}}" nav="{{$mainmenu}}" menu_id="{{$item->menu_id}}" href="#" data-bs-toggle="tooltip" data-bs-placement="right" title="{{$item->description}}"><i class="bi bi-{{$item->icon}}"></i>&nbsp;&nbsp;{{$item->title}}&nbsp;&nbsp; @if ($requestCount > 0)
+                                <span class="top-0 start-100 translate-middle badge rounded-pill bg-danger animate__wobble animate__tada animate__infinite">
+                                    {{$requestCount}}
+                                </span>
+                                @endif
+                            </a>
+                            </li>
+                            @endif
+                        @elseif ($item->menu_id == 15)
+                            <li class="m-1 mt-1 mb-1"><a class="link-light rounded menuLink text-decoration-none p-1 fs-5 {{($menuSelected == $item->menu_id) ? "active":"" }}" menu="{{$item->link}}" nav="{{$mainmenu}}" menu_id="{{$item->menu_id}}" href="#" data-bs-toggle="tooltip" data-bs-placement="right" title="{{$item->description}}"><i class="bi bi-{{$item->icon}}"></i>&nbsp;&nbsp;{{$item->title}}&nbsp;&nbsp; @if ($myRequestCount > 0)
+                                <span class="top-0 start-100 translate-middle badge rounded-pill bg-danger animate__wobble animate__tada animate__infinite">
+                                    {{$myRequestCount}}
+                                </span>
+                                @endif
+                            </a>
+                            </li>
+                        @else
+                            <li class="m-1 mt-1 mb-1"><a class="link-light rounded menuLink text-decoration-none p-1 fs-5 {{($menuSelected == $item->menu_id) ? "active":"" }}" menu="{{$item->link}}" nav="{{$mainmenu}}" menu_id="{{$item->menu_id}}" href="#" data-bs-toggle="tooltip" data-bs-placement="right" title="{{$item->description}}"><i class="bi bi-{{$item->icon}}"></i>&nbsp;&nbsp;{{$item->title}}</a></li>
+                        @endif
                         @endif
                         @else
                         <li class="border-top my-3"></li>

@@ -52,6 +52,7 @@ class Tablecolumn extends Model
             'updated_at' => 'Modified On',
             'address' => 'Address',
             'contact' => 'Contact',
+            'office_head' => 'Office Head/Approver',
             'color' => 'Color',
             'email' => 'Email',
             'purpose' => 'Purpose',

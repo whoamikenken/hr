@@ -499,6 +499,13 @@ class Extras extends Model
         return $data;
     }
 
+    public static function getApproverHead($employeeID)
+    {
+        $office = DB::table('employees')->where('employee_id', '=', $employeeID)->value("office");
+        $officeHead =  DB::table('offices')->where("code", '=', $office)->value("head_id");
+        return $officeHead;
+    }
+
 
     public static function AttendanceDescriptionCheckerIfLate($employeeid, $date)
     {
@@ -531,5 +538,19 @@ class Extras extends Model
         $base64 = str_replace('data:image/jpeg;base64,', '', $base64);
         $base64 = str_replace('\/', '/', $base64);
         return $base64;
+    }
+
+    public static function getEmployeeName($employee_id)
+    {
+        return DB::table('employees')->select(DB::raw("CONCAT(fname,' ', lname) AS name"))->where('employee_id', $employee_id)->value('name');
+    }
+    public static function CheckIfApprover($employee_id)
+    {
+        $checker =  DB::table('offices')->where('head_id', $employee_id)->get();
+        if(count($checker) > 0){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

@@ -313,6 +313,7 @@ class EmployeeController extends Controller
                 $query->orderBy('time_in', 'desc');
 
                 $result = $query->get();
+                
                 if (count($result) > 0) {
                     foreach ($result as $ky => $value) {
                         $data = array();

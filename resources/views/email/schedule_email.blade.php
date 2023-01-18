@@ -574,7 +574,7 @@
                     <td class="mcnCaptionLeftImageContent" align="center" valign="top">
                     
                         
-                        <img alt="" src="https://mcusercontent.com/6e3565a08d78ae55ef0e6bebf/images/6ce61250-eaab-445d-0b66-4d32fd033aaf.png" width="264" style="max-width: 667px; border-radius: 0%;" class="mcnImage">
+                        <img alt="" src="https://mcusercontent.com/6e3565a08d78ae55ef0e6bebf/images/d5f7934a-9b0b-1e2b-a669-eaab85e4ca50.png" width="264" style="max-width: 667px; border-radius: 0%;" class="mcnImage">
                         
                     
                     </td>

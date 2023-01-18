@@ -199,7 +199,7 @@
                         <label style="font-weight:600">Account Status</label>
                         <div class="input-group">
                             <div class="input-group-text"><i class="bi bi-person-check"></i></div>
-                            <select name="marital_status" id="isactive" class="form-control form-select">
+                            <select name="isactive" id="isactive" class="form-control form-select">
                                 <option value="">Select Option</option>
                                 <option value="Active" {{ (isset($isactive) && $isactive == "Active")? "selected":"" }} >Active</option>
                                 <option value="Inactive" {{ (isset($isactive) && $isactive == "Inactive")? "selected":"" }} >Terminated</option>

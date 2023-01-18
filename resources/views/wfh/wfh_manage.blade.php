@@ -3,13 +3,13 @@
 @section('content')
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">My Work Request</h1>
+    <h1 class="h2">Manage Work Request</h1>
 </div>
 <div class="card shadow animate__animated animate__fadeInRight">
     <div class="card-body">
         <div class="row mb-2">
             <div class="col-sm-5">
-                <a href="javascript:void(0);" class="btn btn-primary mb-2 addbtn"><i class="bi bi-plus-circle"></i> Add Work Request</a>
+                {{-- <a href="javascript:void(0);" class="btn btn-primary mb-2 addbtn"><i class="bi bi-plus-circle"></i> Add Work Request</a> --}}
             </div>
             <div class="col-sm-7">
                 <div class="text-sm-end">
@@ -18,7 +18,7 @@
         </div>
         
             <div class="table-responsive">
-                <table id="WFHTable" class="table table-hover table-responsive">
+                <table id="WFHManageTable" class="table table-hover table-responsive">
                 </table>
             </div>
             
@@ -55,15 +55,15 @@
 
         $.ajax({
             type: "POST",
-            url: "{{ url('wfh/table')}}",
+            url: "{{ url('wfh/manage_table')}}",
             data: {},
             async: false,
             success:function(response){
-                $("#WFHTable").html(response);
+                $("#WFHManageTable").html(response);
                 // Count TH
-                var rowCount = $('#WFHTable th').length - 1;
+                var rowCount = $('#WFHManageTable th').length - 1;
                 var thCount = Array.from({length: rowCount}, (_, i) => i + 1);
-                tableObj = $("#WFHTable").DataTable({
+                tableObj = $("#WFHManageTable").DataTable({
                     dom: 'Bfrtip',
                     buttons: [
                     {
@@ -76,7 +76,7 @@
                         },
                         customize: function ( doc ) {
                             var colCount = new Array();
-                            $("#WFHTable").find('tbody tr:first-child td').each(function(){
+                            $("#WFHManageTable").find('tbody tr:first-child td').each(function(){
                                 if($(this).attr('colspan')){
                                     for(var i=1;i<=$(this).attr('colspan');$i++){
                                         colCount.push('*');
@@ -112,27 +112,11 @@
         });
     }
 
-    $(".addbtn").click(function() {
-        var uid = "add";
-        $.ajax({
-            type: "POST",
-            url: "{{ url('wfh/getModal')}}",
-            data: {
-                uid: uid
-            },
-            success: function(response) {
-                $("#modal-view").modal('toggle');
-                $("#modal-view").find(".modal-title").text("Add Work Request");
-                $("#modal-view").find("#modal-display").html(response);
-            }
-        });
-    });
-
-    $("#WFHTable").on("click", ".editbtn", function() {
+    $("#WFHManageTable").on("click", ".editbtn", function() {
         var uid = $(this).attr('id');
         $.ajax({
             type: "POST",
-            url: "{{ url('wfh/getModal')}}",
+            url: "{{ url('wfh/getModalManage')}}",
             data: {
                 uid: uid
             },
@@ -144,7 +128,7 @@
         });
     });
 
-    $("#WFHTable").on("click", ".viewbtn", function() {
+    $("#WFHManageTable").on("click", ".viewbtn", function() {
         var uid = $(this).attr('id');
 
         $.ajax({
@@ -163,7 +147,7 @@
         });
     });
 
-    $("#WFHTable").on("click", ".delbtn", function() {
+    $("#WFHManageTable").on("click", ".delbtn", function() {
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
                 confirmButton: 'btn btn-success',
