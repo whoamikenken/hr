@@ -267,5 +267,21 @@ class MenuSeeder extends Seeder
             'description' => "List of work requests"
         ]);
 
+        Menu::factory()->create([
+            'root' => '0',
+            'menu_id' => function () {
+                $max = Menu::count('id'); // returns 0 if no records exist.
+                return $max + 1;
+            },
+            'order' => function () {
+                $maxOrder = Menu::where('root', '=', '0')->count('order'); // returns 0 if no records exist.
+                return $maxOrder + 1;
+            },
+            'title' => 'Web Logs',
+            'link' => 'logs/logs',
+            'icon' => 'card-checklist',
+            'description' => "List of work requests"
+        ]);
+
     }
 }

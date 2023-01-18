@@ -57,7 +57,7 @@ class EmployeeFactory extends Factory
             'family_contact' => fake()->e164PhoneNumber(),
             'date_applied' => Carbon::createFromTimestamp(rand(strtotime("2022-01-01"), strtotime("2022-11-10")))->format('Y-m-d'),
             'gender' => $gender,
-            'user_profile' => "user_profile/8CHIugcL35JIBzkdBSnFEh4y09OYJH5ZbJbjG0M0.jpg",
+            // 'user_profile' => "user_profile/8CHIugcL35JIBzkdBSnFEh4y09OYJH5ZbJbjG0M0.jpg",
             'isactive' => fake()->randomElement(['Active', 'Inactive']),
             'office' => fake()->randomElement(['IT','MO', 'ACCT', 'HR','CCJE','CED', 'ITE','ARC','PSY','MAP', 'GE']),
             'department' => fake()->randomElement(['IT','HR', 'MTC', 'TCH', 'ACCT']),

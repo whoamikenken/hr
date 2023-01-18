@@ -67,12 +67,19 @@ class HomeController extends Controller
     public function dashboard(){
     
         if(Auth::user()->user_type == "Admin"){
-        $data['applicant_month'] = Extras::countApplicantRegistered();
-        $data['applicant_count'] = Extras::countApplicantRegisteredAll();
-        $data['student_month'] = Extras::countStudentRegistered();
-        $data['student_count'] = Extras::countStudentRegisteredAll();
-        $data['top_adviser'] = DB::table('users')->select("*", DB::raw('(SELECT COUNT(*) FROM students WHERE adviser = users.id) as total_handle'), DB::raw('(SELECT description FROM campuses WHERE code = users.campus) as campusDesc'))->where("user_type", "=", 'Professor')->orderBy("total_handle", "desc")->paginate(8);
-        $data['announcement'] = DB::table('announcements')->select(array('id','title','description'))->paginate(8);
+        $data['employee_month'] = Extras::countEmployeeRegistered();
+        $data['employee_count'] = Extras::countEmployeeRegisteredAll();
+        $data['employee_present'] = Extras::countPresentEmployee();
+        $data['employee_absent'] = Extras::countAbsentEmployee();
+        $data['student_count'] = Extras::countAbsentEmployee();
+        $data['top_employee'] = DB::table('users')->select("*", DB::raw('(SELECT COUNT(*) FROM timesheets WHERE employee_id = users.username) as total_att'))->where("user_type", "=", 'Employee')->orderBy("total_att", "desc")->paginate(9);
+        foreach ($data['top_employee'] as $key => $value) {
+            $office = DB::table('employees')->where('employee_id', $value->username)->value('office');
+            $department = DB::table('employees')->where('employee_id', $value->username)->value('department');
+            $data['top_employee'][$key]->office = DB::table('offices')->where('code', $office)->value('description');
+            $data['top_employee'][$key]->department = DB::table('departments')->where('code', $department)->value('description');
+        }
+        $data['announcement'] = DB::table('announcements')->select(array('id','title','description'))->paginate(9);
         return view('dashboard/admin', $data);
         }else{
 
@@ -207,44 +214,28 @@ class HomeController extends Controller
         $period   = new DatePeriod($start, $interval, $end);
 
         $highest = 0;
-        $dataStudent = $dataApplicant = "[";
+        $dataEmployee = "[";
         $month = "[";
         foreach ($period as $dt) {
 
-            // Applicant
-            $applicantdept = Extras::countApplicantRegistered($dt->format("m"));
-            if ($applicantdept != 0) {
-                $dataApplicant = $dataApplicant . $applicantdept . ",";
-                if ($applicantdept > $highest) $highest = $applicantdept;
+            // Employee
+            $Employeedept = Extras::countEmployeeRegistered($dt->format("m"));
+            if ($Employeedept != 0) {
+                $dataEmployee = $dataEmployee . $Employeedept . ",";
+                if ($Employeedept > $highest) $highest = $Employeedept;
             } else {
-                $dataApplicant = $dataApplicant . "0,";
+                $dataEmployee = $dataEmployee . "0,";
             }
-
-            // Student
-            $studentdept = Extras::countStudentRegistered($dt->format("m"));
-            if ($studentdept != 0) {
-                $dataStudent = $dataStudent . $studentdept . ",";
-                if ($studentdept > $highest) $highest = $studentdept;
-            } else {
-                $dataStudent = $dataStudent . "0,";
-            }
-
             $month = $month . '"' . $dt->format("F") . '",';
         }
 
-        // Student
-        $dataStudent = substr($dataStudent, 0, -1);
-        $dataStudent = $dataStudent . "]";
-
-        // Applicant
-        $dataApplicant = substr($dataApplicant, 0, -1);
-        $dataApplicant = $dataApplicant . "]";
-
+        // Employee
+        $dataEmployee = substr($dataEmployee, 0, -1);
+        $dataEmployee = $dataEmployee . "]";
 
         $month = substr($month, 0, -1);
         $month = $month . "]";
-        $return['student']['data'] = $dataStudent;
-        $return['applicant']['data'] = $dataApplicant;
+        $return['employee']['data'] = $dataEmployee;
 
         $return['month'] = $month;
         $percentageAdded = (30 / 100) * $highest;
@@ -253,14 +244,14 @@ class HomeController extends Controller
         echo json_encode($return);
     }
 
-    public function campusMontlyBarChart()
+    public function officeMontlyBarChart()
     {
         $start    = (new DateTime(date("Y-") . "01-01"))->modify('first day of this month');
         $end      = (new DateTime(date("Y-") . "12-31"))->modify('first day of next month');
         $interval = DateInterval::createFromDateString('1 month');
         $period   = new DatePeriod($start, $interval, $end);
 
-        $getBranchList = Extras::getCampusesList();
+        $getBranchList = Extras::getOfficeList();
 
         $return = $data = array();
         $highest = 0;
@@ -269,7 +260,7 @@ class HomeController extends Controller
         foreach ($period as $dt) {
             $month = $month . '"' . $dt->format("F") . '",';
             foreach ($getBranchList as $key => $value) {
-                $count = Extras::getCampusStudentMonth($dt->format("m"), $value->code);
+                $count = Extras::getOfficeEmployeeAttendanceMonth($dt->format("m"), $value->code);
                 $data['dataset'][$value->code]['label'] = $value->description;
                 $data['dataset'][$value->code]['backgroundColor'] = $value->color;
                 $data['dataset'][$value->code]['borderRadius'] = 5;
@@ -364,14 +355,14 @@ class HomeController extends Controller
         echo json_encode($return);
     }
 
-    public function campusPieStudent()
+    public function officePieEmployee()
     {
-        $campusResult = DB::table('campuses')->get();
+        $campusResult = DB::table('offices')->get();
 
         $highest = 0;
         $data = array();
         foreach ($campusResult as $key => $value) {
-            $count = Extras::getStudentInCampus($value->code);
+            $count = Extras::getEmployeeInOffce($value->code);
             $data['dataset']['label'][] = $value->description;
             $data['dataset']['backgroundColor'][] = $value->color;
             $data['dataset']['data'][] = $count;

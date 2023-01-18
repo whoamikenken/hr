@@ -369,6 +369,10 @@ class EmployeeController extends Controller
 
         $formFields = array($column => $value);
         $query = DB::table('employees')->where('employee_id', $employee_id)->update($formFields);
+        if($column == "user_profile"){
+            $updatePhoto = array("user_image" => $value);
+            $query = DB::table('users')->where('username', $employee_id)->update($updatePhoto);
+        }
         if ($query) {
             $return = array('status' => 1, 'msg' => 'Successfully updated employee', 'title' => 'Success!');
         }

@@ -114,8 +114,8 @@ Route::get('/dashboard', [HomeController::class, 'index'])->middleware('auth');
 Route::get('/dashboard/getDashboard', [HomeController::class, 'dashboard'])->withoutMiddleware([VerifyCsrfToken::class])->middleware('auth');
 Route::get('/dashboard/getDepartureMontly', [HomeController::class, 'departureMontlyBarChart'])->withoutMiddleware([VerifyCsrfToken::class])->middleware('auth');
 Route::get('/dashboard/getPerformanceMontly', [HomeController::class, 'performanceMontlyBarChart'])->withoutMiddleware([VerifyCsrfToken::class])->middleware('auth');
-Route::get('/dashboard/getPerformanceCampusMontly', [HomeController::class, 'campusMontlyBarChart'])->withoutMiddleware([VerifyCsrfToken::class])->middleware('auth');
-Route::get('/dashboard/getCampusPie', [HomeController::class, 'campusPieStudent'])->withoutMiddleware([VerifyCsrfToken::class])->middleware('auth');
+Route::get('/dashboard/getPerformanceOfficeMontly', [HomeController::class, 'officeMontlyBarChart'])->withoutMiddleware([VerifyCsrfToken::class])->middleware('auth');
+Route::get('/dashboard/getOfficePie', [HomeController::class, 'officePieEmployee'])->withoutMiddleware([VerifyCsrfToken::class])->middleware('auth');
 Route::get('/dashboard/getUserPie', [HomeController::class, 'getUserPieCount'])->withoutMiddleware([VerifyCsrfToken::class])->middleware('auth');
 
 // Employee

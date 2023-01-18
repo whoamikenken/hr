@@ -167,20 +167,28 @@ class Extras extends Model
         return count($result);
     }
 
-    public static function countApplicantRegistered($month = "")
+    public static function countEmployeeRegistered($month = "")
     {
         
         if(!$month) $month = date("m");
-        $result = DB::select("SELECT applicant_id FROM applicants WHERE MONTH(`date_applied`) = $month");
+        $result = DB::select("SELECT employee_id FROM employees WHERE MONTH(`date_applied`) = $month");
 
         return count($result);
     }
 
-    public static function countStudentRegistered($month = "")
+    public static function countPresentEmployee()
     {
-        if (!$month) $month = date("m");
-        $result = DB::select("SELECT student_id FROM students WHERE MONTH(`date_applied`) = $month");
-        return count($result);
+        $result =DB::table('employees')->join('timesheets_trail_history', 'employees.employee_id', '=', 'timesheets_trail_history.employee_id')->select('employees.employee_id')->where(DB::raw("date(timesheets_trail_history.log_time)"), "=", date('Y-m-d'))->count();
+        return $result;
+    }
+
+    public static function countAbsentEmployee()
+    {
+        $result = DB::table('employees')->join('timesheets_trail_history', 'employees.employee_id', '=', 'timesheets_trail_history.employee_id')->select('employees.employee_id')->where(DB::raw("date(timesheets_trail_history.log_time)"), "=", date('Y-m-d'))->count();
+
+        $resultTotalEmp = DB::table('employees')->count();
+        $absent = $resultTotalEmp - $result;
+        return $absent;
     }
 
     public static function countStudentRegisteredAll()
@@ -190,9 +198,9 @@ class Extras extends Model
         return count($result);
     }
 
-    public static function countApplicantRegisteredAll()
+    public static function countEmployeeRegisteredAll()
     {
-        $result = DB::select("SELECT applicant_id FROM applicants");
+        $result = DB::select("SELECT employee_id FROM employees");
 
         return count($result);
     }
@@ -239,9 +247,9 @@ class Extras extends Model
         return count($result);
     }
 
-    public static function getStudentInCampus($campus = null)
+    public static function getEmployeeInOffce($office = null)
     {
-        $result = DB::select("SELECT * FROM applicants WHERE campus = '$campus' AND isactive = 'Active'");
+        $result = DB::select("SELECT * FROM employees WHERE office = '$office'");
 
         return count($result);
     }
@@ -253,7 +261,7 @@ class Extras extends Model
         return count($result);
     }
 
-    public static function getCampusStudentMonth($month = null, $campus = null)
+    public static function getOfficeEmployeeAttendanceMonth($month = null, $campus = null)
     {
         $result = DB::select("SELECT * FROM students WHERE campus = '$campus' AND MONTH(date_applied) = $month AND YEAR(date_applied) = YEAR(CURDATE())");
 
@@ -269,11 +277,11 @@ class Extras extends Model
         return $result;
     }
 
-    public static function getCampusesList($campus = null)
+    public static function getOfficeList($office = null)
     {
         $wh = "WHERE 1";
-        if ($campus) $wh .= " AND code = '$campus'";
-        $result = DB::select("SELECT * FROM campuses $wh");
+        if ($office) $wh .= " AND code = '$office'";
+        $result = DB::select("SELECT * FROM offices $wh");
 
         return $result;
     }

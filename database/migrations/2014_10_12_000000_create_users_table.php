@@ -21,11 +21,9 @@ return new class extends Migration
             $table->string('lname');
             $table->string('gender')->nullable();
             $table->string('user_type');
-            $table->string('campus')->nullable();
-            $table->string('course')->nullable();
             $table->string('status')->default('unverified');
             $table->string('email')->unique();
-            $table->string('user_image')->nullable();
+            $table->text('user_image')->nullable();
             $table->string('read', 250)->nullable();
             $table->string('add', 250)->nullable();
             $table->string('delete', 250)->nullable();
