@@ -331,17 +331,17 @@ class Extras extends Model
 
     public static function getNoAdd()
     {
-        return array(999, 13, 14, 1, 5, 801, 802, 803, 804);
+        return array(999, 13, 14, 1, 5, 801, 802, 803, 804,17);
     }
 
     public static function getNoDel()
     {
-        return array(999, 13, 14, 1, 5, 801, 802, 803, 804);
+        return array(999, 13, 14, 1, 5, 801, 802, 803, 804,17);
     }
 
     public static function getNoEdit()
     {
-        return array(5,999,1,13,14);
+        return array(5,999,1,13,14,17);
     }
 
     public static function requestToEmpsys($link, $type = 'get', $data = null, $token = null){

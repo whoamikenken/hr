@@ -24,6 +24,7 @@ use App\Http\Controllers\SectionController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TablecolumnController;
+use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\WorkFromHomeController;
 use App\Http\Controllers\YearlevelController;
 
@@ -136,9 +137,14 @@ Route::post('/wfh/add', [WorkFromHomeController::class, 'store']);
 Route::post('/wfh/delete', [WorkFromHomeController::class, 'delete']);
 Route::post('/wfh/markAsRead', [WorkFromHomeController::class, 'markRead'])->withoutMiddleware([VerifyCsrfToken::class]);
 
+// WFH Manage
 Route::post('/wfh/manage_table', [WorkFromHomeController::class, 'getTableManage'])->withoutMiddleware([VerifyCsrfToken::class]);
 Route::post('/wfh/manage_markAsRead', [WorkFromHomeController::class, 'markReadManage'])->withoutMiddleware([VerifyCsrfToken::class]);
 Route::post('/wfh/getModalManage', [WorkFromHomeController::class, 'getModalManage'])->withoutMiddleware([VerifyCsrfToken::class]);
+
+// LOGS
+Route::post('/logs/table', [TimesheetController::class, 'getTable'])->withoutMiddleware([VerifyCsrfToken::class]);
+Route::post('/logs/getModal', [TimesheetController::class, 'getModal'])->withoutMiddleware([VerifyCsrfToken::class]);
 
 // Test Email Function
 Route::get('/applicant/testEmail', [ApplicantController::class, 'testEmail'])->withoutMiddleware([VerifyCsrfToken::class]);

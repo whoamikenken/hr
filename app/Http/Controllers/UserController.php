@@ -130,6 +130,7 @@ class UserController extends Controller
         $access["Main"][] = array('root_id' => 0, "menu_id" => 3, "title" => "User Management");
         $access["Main"][] = array('root_id' => 0, "menu_id" => 13, "title" => "My Profile");
         $access["Main"][] = array('root_id' => 0, "menu_id" => 14, "title" => "My Attendance");
+        $access["Main"][] = array('root_id' => 0, "menu_id" => 17, "title" => "Employee Logs");
         foreach ($menus as $key => $value) {
             $getSubmenus = Extras::getSubMenus($value->menu_id);
             if ($value->menu_id == 2) {

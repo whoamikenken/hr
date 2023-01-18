@@ -277,10 +277,10 @@ class MenuSeeder extends Seeder
                 $maxOrder = Menu::where('root', '=', '0')->count('order'); // returns 0 if no records exist.
                 return $maxOrder + 1;
             },
-            'title' => 'Web Logs',
-            'link' => 'logs/logs',
-            'icon' => 'card-checklist',
-            'description' => "List of work requests"
+            'title' => 'Employee Logs',
+            'link' => 'logs/web_logs',
+            'icon' => 'person-lines-fill',
+            'description' => "List of employee logs"
         ]);
 
     }

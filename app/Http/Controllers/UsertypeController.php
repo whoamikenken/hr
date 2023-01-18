@@ -62,6 +62,7 @@ class UsertypeController extends Controller
         $access["Main"][] = array('root_id' => 0, "menu_id" => 14, "title" => "My Attendance");
         $access["Main"][] = array('root_id' => 0, "menu_id" => 15, "title" => "Work Request");
         $access["Main"][] = array('root_id' => 0, "menu_id" => 16, "title" => "Manage Request");
+        $access["Main"][] = array('root_id' => 0, "menu_id" => 17, "title" => "Employee Logs");
         foreach ($menus as $key => $value) {
             $getSubmenus = Extras::getSubMenus($value->menu_id);
             if ($value->menu_id == 2) {

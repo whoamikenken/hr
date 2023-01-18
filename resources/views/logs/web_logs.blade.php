@@ -9,7 +9,7 @@
     <div class="card-body">
         <div class="row mb-2">
             <div class="col-sm-5">
-                {{-- <a href="javascript:void(0);" class="btn btn-primary mb-2 addbtn"><i class="bi bi-plus-circle"></i> Add Work Request</a> --}}
+                {{-- <a href="javascript:void(0);" class="btn btn-primary mb-2 addbtn"><i class="bi bi-plus-circle"></i> Add Employee Logs</a> --}}
             </div>
             <div class="col-sm-7">
                 <div class="text-sm-end">
@@ -18,12 +18,13 @@
         </div>
         
             <div class="table-responsive">
-                <table id="WFHTable" class="table table-hover table-responsive">
+                <table id="webLogs" class="table table-hover table-responsive">
                 </table>
             </div>
             
     </div> <!-- end card-body-->
 </div>
+
 
 <script>
     var logo;
@@ -32,7 +33,7 @@
     
     $(document).ready(function () {
 
-        WFHList();
+        WebLogsList();
 
         var bar = getBase64FromUrl('{{Session::get('agency_logo')}}');
         
@@ -47,7 +48,7 @@
 
     
 
-    function WFHList(){
+    function WebLogsList(){
 
         if(tableObj!=null){
             tableObj.destroy();
@@ -55,28 +56,28 @@
 
         $.ajax({
             type: "POST",
-            url: "{{ url('wfh/table')}}",
+            url: "{{ url('logs/table')}}",
             data: {},
             async: false,
             success:function(response){
-                $("#WFHTable").html(response);
+                $("#webLogs").html(response);
                 // Count TH
-                var rowCount = $('#WFHTable th').length - 1;
+                var rowCount = $('#webLogs th').length - 1;
                 var thCount = Array.from({length: rowCount}, (_, i) => i + 1);
-                tableObj = $("#WFHTable").DataTable({
+                tableObj = $("#webLogs").DataTable({
                     dom: 'Bfrtip',
                     buttons: [
                     {
                         extend: 'pdfHtml5',
                         text:'Export PDF',
-                        title: 'Work Request List',
+                        title: 'Employee Logs List',
                         orientation:'landscape',
                         exportOptions: {
                             columns: thCount
                         },
                         customize: function ( doc ) {
                             var colCount = new Array();
-                            $("#WFHTable").find('tbody tr:first-child td').each(function(){
+                            $("#webLogs").find('tbody tr:first-child td').each(function(){
                                 if($(this).attr('colspan')){
                                     for(var i=1;i<=$(this).attr('colspan');$i++){
                                         colCount.push('*');
@@ -99,7 +100,7 @@
                     {
                         text:'Export Excel',
                         extend: 'excelHtml5',
-                        title: 'Work Request List',
+                        title: 'Employee Logs List',
                         exportOptions: {
                             columns: thCount
                         }
@@ -116,124 +117,35 @@
         var uid = "add";
         $.ajax({
             type: "POST",
-            url: "{{ url('wfh/getModal')}}",
+            url: "{{ url('logs/getModal')}}",
             data: {
                 uid: uid
             },
             success: function(response) {
                 $("#modal-view").modal('toggle');
-                $("#modal-view").find(".modal-title").text("Add Work Request");
+                $("#modal-view").find(".modal-title").text("Add Employee Logs");
                 $("#modal-view").find("#modal-display").html(response);
             }
         });
     });
 
-    $("#WFHTable").on("click", ".editbtn", function() {
-        var uid = $(this).attr('id');
-        $.ajax({
-            type: "POST",
-            url: "{{ url('wfh/getModal')}}",
-            data: {
-                uid: uid
-            },
-            success: function(response) {
-                $("#modal-view").modal('toggle');
-                $("#modal-view").find(".modal-title").text("Edit Work Request");
-                $("#modal-view").find("#modal-display").html(response);
-            }
-        });
-    });
-
-    $("#WFHTable").on("click", ".viewbtn", function() {
+    $("#webLogs").on("click", ".viewbtn", function() {
         var uid = $(this).attr('id');
 
         $.ajax({
             type: "POST",
-            url: "{{ url('wfh/getModal')}}",
+            url: "{{ url('logs/getModal')}}",
             data: {
                 uid: uid,
                 mode:"view"
             },
             success: function(response) {
                 $("#modal-view").modal('toggle');
-                $("#modal-view").find(".modal-title").text("View Work Request");
+                $("#modal-view").find(".modal-title").text("View Employee Logs");
                 $("#modal-view").find("#saveModal").remove();
                 $("#modal-view").find("#modal-display").html(response);
             }
         });
-    });
-
-    $("#WFHTable").on("click", ".delbtn", function() {
-        const swalWithBootstrapButtons = Swal.mixin({
-            customClass: {
-                confirmButton: 'btn btn-success',
-                cancelButton: 'btn btn-danger'
-            },
-            buttonsStyling: false
-        })
-
-        swalWithBootstrapButtons.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, proceed!',
-            cancelButtonText: 'No, cancel!',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.value) {
-
-                var code = $(this).attr('id');
-                $.ajax({
-                    type: "POST",
-                    url: "{{ url('wfh/delete')}}",
-                    dataType: 'json',
-                    data: {
-                        code: code,
-                        '_token': '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        if (response.status == 1) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: response.title,
-                                text: response.msg,
-                                timer: 1500
-                            })
-
-                            WFHList();
-                        }else if (response.status == 2) {
-                            Swal.fire({
-                                icon: 'info',
-                                title: response.title,
-                                text: response.msg
-                            })
-                        }else if (response.status == 0) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: response.title,
-                                text: response.msg
-                            })
-                        }else{
-                            Swal.fire({
-                                icon: 'error',
-                                title: "System Error",
-                                text: "Please contact developer."
-                            })
-                        }
-                    }
-                });
-
-            } else if (
-                result.dismiss === Swal.DismissReason.cancel
-            ) {
-                swalWithBootstrapButtons.fire(
-                    'Cancelled',
-                    'Data is safe.',
-                    'error'
-                )
-            }
-        })
     });
 
 </script>

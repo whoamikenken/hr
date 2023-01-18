@@ -59,7 +59,7 @@
                         <div class="h5 mb-0 font-weight-bold text-gray-800">{{$employee_present}}</div>
                     </div>
                     <div class="col-auto">
-                        <i class="bi bi-person-plus-fill fs-1 text-gray-300"></i>
+                        <i class="bi bi-person-check fs-1 text-gray-300"></i>
                     </div>
                 </div>
             </div>
@@ -75,7 +75,7 @@
                         <div class="h5 mb-0 font-weight-bold text-gray-800">{{$employee_absent}}</div>
                     </div>
                     <div class="col-auto">
-                        <i class="bi-people-fill
+                        <i class="bi-person-exclamation
  fs-1 text-gray-300"></i>
                     </div>
                 </div>
@@ -243,7 +243,6 @@ let delayed;
             data: {},
             dataType: "json",
             success:function(response){
-                console.log(response.dataset.label);
                 const config = {
                     type: 'pie',
                     data: {
@@ -283,7 +282,6 @@ let delayed;
             data: {},
             dataType: "json",
             success:function(response){
-                console.log(response);
                 $("#performanceLoader").remove();
                 const config = {
                     type: 'bar',
