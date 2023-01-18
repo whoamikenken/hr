@@ -73,7 +73,7 @@
                             </div>
                         </div>
                         <div class="col-md-5 ps-0 d-none d-md-block">
-                            <div class="form-right h-100 bg-secondary text-white text-center pt-5">
+                            <div class="form-right h-100 text-white text-center pt-5" style="background-color:#c2d6e7">
                                 <img src="{{ asset('images/logo.png') }}" class="img-fluid" alt=""
                                 style="max-width:50%;">
                                 <h2 class="fs-1">Welcome!</h2>
