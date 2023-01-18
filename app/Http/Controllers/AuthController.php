@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Extras;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +14,7 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login','register']]);
+        $this->middleware('auth:api', ['except' => ['login','register', 'saveLogs']]);
     }
 
     public function login(Request $request)
@@ -43,6 +44,22 @@ class AuthController extends Controller
             'employee_id' => $employeeDetail[0]->employee_id,
             'token' => $token
         ]);
+    }
+
+    public function saveLogs(Request $request)
+    {
+        $log = $request->input();
+        $base64 = Extras::fix_base64($log['base_64']);
+        $image = base64_decode($base64);
+        // dd($image);
+        $p = Storage::disk('s3')->put("user_profile/".$log['employee_id'].'-'. $log['time'].'.png', $image);
+        dd($p);
+        
+
+        DB::table('timesheets_trail_history')->insert([
+            ['machine_type' => json_encode($log)],
+        ]);
+        
     }
 
     public function register(Request $request)

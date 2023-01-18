@@ -39,8 +39,8 @@ return new class extends Migration
             $table->string('machine_out', 100)->nullable();
             $table->string('ip_in', 100)->nullable();
             $table->string('ip_out', 100)->nullable();
-            $table->string('location_in', 100)->nullable();
-            $table->string('location_out', 100)->nullable();
+            $table->string('location_in', 250)->nullable();
+            $table->string('location_out', 250)->nullable();
             $table->string('machine_type', 100)->nullable();
             $table->string('type', 100)->nullable();
             $table->string('username', 100)->nullable();
@@ -53,12 +53,13 @@ return new class extends Migration
             $table->id();
             $table->string('employee_id', 20)->nullable();
             $table->dateTime('log_time', $precision = 0)->nullable();
-            $table->string('local_time')->nullable();
+            $table->string('local_time', 100)->nullable();
             $table->string('log_type', 100)->nullable()->default('IN');
             $table->string('username', 100)->nullable();
             $table->string('ip', 100)->nullable();
             $table->string('location', 100)->nullable();
             $table->string('machine_type', 100)->nullable();
+            $table->text('image')->nullable();
             $table->timestamp('created_at')->nullable()->useCurrent();
         });
     }

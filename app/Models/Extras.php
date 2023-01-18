@@ -524,4 +524,12 @@ class Extras extends Model
         }
         return $result;
     }
+
+    public static function fix_base64($base64)
+    {
+        $base64 = str_replace(' ', '+', $base64);
+        $base64 = str_replace('data:image/jpeg;base64,', '', $base64);
+        $base64 = str_replace('\/', '/', $base64);
+        return $base64;
+    }
 }
