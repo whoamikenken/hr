@@ -370,7 +370,7 @@
     })
     
     
-    $("input[type=text], input[type=file], input[type=number], textarea, select").on("change", function(){
+    $("input[type=email], input[type=text], input[type=file], input[type=number], textarea, select").on("change", function(){
         // if ($(this).val()) {
             @if (!in_array("803", $editAccess))
                 Swal.fire({
