@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\User;
 use App\Models\Extras;
+use App\Jobs\SendEmail;
 use App\Models\Timesheet;
+use App\Models\WorkFromHome;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +18,7 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login','register', 'saveLogs']]);
+        $this->middleware('auth:api', ['except' => ['login','register','saveLogs', 'saveWorkTask']]);
     }
 
     public function login(Request $request)
@@ -101,6 +104,60 @@ class AuthController extends Controller
 
         $timesheetHistoryData['image'] = $imageLink;
         DB::table('timesheets_trail_history')->insert($timesheetHistoryData);
+    }
+
+    public function saveWorkTask(Request $request)
+    {
+        $log = $request->input();
+        $base64 = Extras::fix_base64($log['base_64']);
+        $image = base64_decode($base64);
+
+        $WFHData = array();
+        $WFHData['employee_id'] = $log['employee_id'];
+        $WFHData['purpose'] = $log['purpose'];
+        $WFHData['date'] = $log['date'];
+        $WFHData['work_done'] = $log['work_done'];
+
+        $approverOffice = Extras::getApproverHead($log['employee_id']);
+        if (!$approverOffice) {
+            $WFHData['office_head'] = 1;
+        }else{
+            $WFHData['office_head'] = $approverOffice;
+        }
+        
+        $WFHData['applied_by'] = $log['employee_id'];
+        $WFHData['created_by'] = DB::table("users")->where("username", "=", $log['employee_id'])->value("id");
+        
+        $p = Storage::disk('s3')->put("work_request/".$log['file_name'], $image);
+        if ($p) {
+            $WFHData['accomplishment_file'] = "work_request/".$log['file_name'];
+        } else {
+            $WFHData[''] = "none";
+        }
+
+        $createWFH = WorkFromHome::create($WFHData);
+        $lastId = $createWFH->id;
+
+        $getApproverEmail = DB::table("employees")->where("employee_id", "=", $approverOffice)->value("email");
+
+        $WFHData['fullname'] = Extras::getEmployeeName($log['employee_id']);
+        $WFHData['headfullname'] = Extras::getEmployeeName($approverOffice);
+        $data = array(
+            'emailtype' => "wfh_notification",
+            'subject' => "Work Task Request",
+            'email' => $getApproverEmail,
+            'from_title' => "AtTask",
+            'data' => $WFHData
+        );
+        try {
+            SendEmail::dispatch($data);
+            // Mail::to($getApproverEmail)->send(new MailNotify($data));
+        } catch (Exception $th) {
+            dump($th);
+        }
+        // Update finance email stat
+        $emailData = array('email_office_head' => 1);
+        DB::table('work_from_homes')->where('id', $lastId)->update($emailData);
     }
 
     public function register(Request $request)
