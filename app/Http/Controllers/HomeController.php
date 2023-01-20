@@ -82,7 +82,16 @@ class HomeController extends Controller
         $data['announcement'] = DB::table('announcements')->select(array('id','title','description'))->paginate(9);
         return view('dashboard/admin', $data);
         }else{
-
+            
+            $data['top_employee'] = DB::table('users')->select("*", DB::raw('(SELECT COUNT(*) FROM timesheets WHERE employee_id = users.username) as total_att'))->where("user_type", "=", 'Employee')->orderBy("total_att", "desc")->paginate(9);
+            foreach ($data['top_employee'] as $key => $value) {
+                $office = DB::table('employees')->where('employee_id', $value->username)->value('office');
+                $department = DB::table('employees')->where('employee_id', $value->username)->value('department');
+                $data['top_employee'][$key]->office = DB::table('offices')->where('code', $office)->value('description');
+                $data['top_employee'][$key]->department = DB::table('departments')->where('code', $department)->value('description');
+            }
+            $data['announcement'] = DB::table('announcements')->select(array('id', 'title', 'description'))->paginate(9);
+            return view('dashboard/admin', $data);
         }
     }
 

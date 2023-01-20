@@ -15,102 +15,106 @@
         border-left: 0.25rem solid #18ff5d!important;
     }
 </style>
-<div class="row animate__animated animate__backInRight">
-    <!-- Earnings (Monthly) Card Example -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-primary shadow h-100 py-2">
-        <div class="card-body">
-            <div class="row no-gutters align-items-center">
-                <div class="col mr-2">
-                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                        Registered Employee {{ date("F")}}</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{$employee_month}}</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="bi bi-person-plus fs-1 text-gray-300"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-info shadow h-100 py-2">
-        <div class="card-body">
-            <div class="row no-gutters align-items-center">
-                <div class="col mr-2">
-                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                        Total Employee</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{$employee_count}}</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="bi bi-people fs-1 text-gray-300"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-success shadow h-100 py-2">
-        <div class="card-body">
-            <div class="row no-gutters align-items-center">
-                <div class="col mr-2">
-                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                        Present Employee</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{$employee_present}}</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="bi bi-person-check fs-1 text-gray-300"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-danger shadow h-100 py-2">
-        <div class="card-body">
-            <div class="row no-gutters align-items-center">
-                <div class="col mr-2">
-                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                        Absent Employee</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{$employee_absent}}</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="bi-person-exclamation
- fs-1 text-gray-300"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>  
-</div>
-
-<div class="row animate__animated animate__fadeInRight">
-    <div class="col-sm-12 col-md-12 col-xl-8">
-        <div class="card mb-4">
-            <div class="card-header bg-info">
-                <i class="bi bi-bar-chart-line-fill me-1"></i>
-                Employement Performance Chart
-            </div>
+@if (Auth::user()->user_type == "Admin")
+    <div class="row animate__animated animate__backInRight">
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
             <div class="card-body">
-                <div class="d-flex justify-content-center" id="performanceLoader">
-                    <div class="spinner-border text-info" role="status" style="width: 8rem; height: 8rem;">
-                        <span class="visually-hidden">Loading...</span>
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Registered Employee {{ date("F")}}</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{$employee_month}}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-person-plus fs-1 text-gray-300"></i>
+                        </div>
                     </div>
                 </div>
-                <canvas id="myBarChart" width="100%" height="47"></canvas>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Total Employee</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{$employee_count}}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-people fs-1 text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Present Employee</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{$employee_present}}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-person-check fs-1 text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-danger shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Absent Employee</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{$employee_absent}}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi-person-exclamation
+    fs-1 text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>  
+    </div>
+@endif
+@if (Auth::user()->user_type == "Admin")
+    <div class="row animate__animated animate__fadeInRight">
+        <div class="col-sm-12 col-md-12 col-xl-8">
+            <div class="card mb-4">
+                <div class="card-header bg-info">
+                    <i class="bi bi-bar-chart-line-fill me-1"></i>
+                    Employement Performance Chart
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-center" id="performanceLoader">
+                        <div class="spinner-border text-info" role="status" style="width: 8rem; height: 8rem;">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                    <canvas id="myBarChart" width="100%" height="47"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-12 col-xl-4 animate__animated animate__backInRight">
+            <div class="card mb-4">
+                <div class="card-header bg-info">
+                    <i class="bi bi-pie-chart-fill me-1"></i>
+                    Offices
+                </div>
+                <div class="card-body"><canvas id="pieChartBranch" width="100%" height="40"></canvas></div>
             </div>
         </div>
     </div>
-    <div class="col-sm-12 col-md-12 col-xl-4 animate__animated animate__backInRight">
-        <div class="card mb-4">
-            <div class="card-header bg-info">
-                <i class="bi bi-pie-chart-fill me-1"></i>
-                Offices
-            </div>
-            <div class="card-body"><canvas id="pieChartBranch" width="100%" height="40"></canvas></div>
-        </div>
-    </div>
-</div>
+@endif
+
 
 <div class="row">
     <div class="col-sm-12">

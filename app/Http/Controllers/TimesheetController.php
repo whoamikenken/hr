@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Extras;
 use App\Models\Tablecolumn;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +24,7 @@ class TimesheetController extends Controller
         $data['result'] = DB::table('timesheets_trail_history')->where($where)->get();
         // get user creator
         foreach ($data['result'] as $key => $value) {
-            $data['result'][$key]->name = DB::table('users')->where('id', $value->employee_id)->value('name');
+            $data['result'][$key]->name = Extras::getEmployeeName($value->employee_id);
         }
 
         return view('logs/web_logs_table', $data);
