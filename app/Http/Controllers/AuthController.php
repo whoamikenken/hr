@@ -104,6 +104,10 @@ class AuthController extends Controller
 
         $timesheetHistoryData['image'] = $imageLink;
         DB::table('timesheets_trail_history')->insert($timesheetHistoryData);
+
+        return response()->json([
+            'status' => 'success'
+        ]);
     }
 
     public function saveWorkTask(Request $request)
@@ -158,6 +162,10 @@ class AuthController extends Controller
         // Update finance email stat
         $emailData = array('email_office_head' => 1);
         DB::table('work_from_homes')->where('id', $lastId)->update($emailData);
+
+        return response()->json([
+            'status' => 'success'
+        ]);
     }
 
     public function register(Request $request)
