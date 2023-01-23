@@ -402,7 +402,7 @@ $mainmenu = 1;
         </div>
     </div>
     
-    <form id="menu-form" action="/home" method="POST" style="display: none;">
+    <form id="menu-form" action="{{ url('home')}}" method="POST" style="display: none;">
         @csrf
         <input type="hidden" name="route" value="" />
         <input type="hidden" name="nav" value="" />
