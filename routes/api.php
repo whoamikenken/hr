@@ -15,6 +15,10 @@ use App\Http\Controllers\AuthController;
 |
 */
 
+if (env('APP_ENV') != 'local') {
+    URL::forceRootUrl(env('APP_URL'));
+}
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
