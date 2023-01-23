@@ -39,7 +39,7 @@ services:
     container_name: hr-nginx
     restart: unless-stopped
     ports:
-      - 80:80
+      - 8001:80
     volumes:
       - ./:/var/www
       - ./docker-compose/nginx:/etc/nginx/conf.d/
