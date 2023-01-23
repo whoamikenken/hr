@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\AnnouncementController;
 use App\Models\Extras;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -11,22 +11,23 @@ use App\Http\Controllers\UserController;
 use App\Http\Middleware\VerifyCsrfToken;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\CampusController;
+use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\CoursesController;
 use App\Http\Controllers\ReportsController;
-use App\Http\Controllers\UsertypeController;
-use App\Http\Controllers\ApplicantController;
-use App\Http\Controllers\BatchScheduleController;
-use App\Http\Controllers\DepartmentController;
-use App\Http\Controllers\EmployeeController;
-use App\Http\Controllers\OfficeController;
-use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
-use App\Http\Controllers\TablecolumnController;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\UsertypeController;
+use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\TimesheetController;
-use App\Http\Controllers\WorkFromHomeController;
 use App\Http\Controllers\YearlevelController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\TablecolumnController;
+use App\Http\Controllers\AnnouncementController;
+use App\Http\Controllers\WorkFromHomeController;
+use App\Http\Controllers\BatchScheduleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +39,11 @@ use App\Http\Controllers\YearlevelController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+if (env('APP_ENV') != 'local') {
+    URL::forceRootUrl(env('APP_URL'));
+}
+
 
 Auth::routes();
 
