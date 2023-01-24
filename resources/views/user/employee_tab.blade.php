@@ -94,7 +94,7 @@
                         }else{
                             Toast.fire({
                                 icon: 'error',
-                                title: 'Error please contact kennedy.'
+                                title: 'Error please contact HR/AMS Team.'
                             });
                         }
                     }
