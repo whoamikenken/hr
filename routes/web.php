@@ -48,7 +48,7 @@ if (env('APP_ENV') != 'local') {
 Auth::routes();
 
 Route::get('/', function () {
-    return view('landing');
+    return redirect()->route('home');
 })->name('landing');
 
 Route::match(['get', 'post'], '/login', [LoginController::class, 'index'])->name('login');

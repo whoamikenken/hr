@@ -1,17 +1,17 @@
-<form id="studentForm" class="row g-2 needs-validation" novalidate>
+<form id="employeeForm" class="row g-2 needs-validation" novalidate>
     @csrf
 
     <div class="col-md-6 col-sm-12">
-        <label>Student ID<span class="text-danger">*</span></label>
+        <label>Employee ID<span class="text-danger">*</span></label>
         <div class="input-group">
             <div class="input-group-text"><i class="bi bi-person-fill"></i></div>
-            <input type="text" id="student_id" name="student_id"
-            class="form-control validate" placeholder="Enter Student ID" required value="" onkeyup="this.value=this.value.replace(/[^\d]/,'')">
+            <input type="text" id="employee_id" name="employee_id"
+            class="form-control validate" placeholder="Enter Employee ID" required value="" onkeyup="this.value=this.value.replace(/[^\d]/,'')">
             <div class="valid-feedback">
                 Looks good!
             </div>
             <div class="invalid-feedback">
-                Please input a Student ID.
+                Please input a Employee ID.
             </div>
         </div>
     </div>
@@ -92,66 +92,32 @@
     </div>
 
     <div class="col-md-6 col-sm-12">
-        <label>Campus<span class="text-danger">*</span></label>
+        <label>Office<span class="text-danger">*</span></label>
         <div class="input-group">
             <div class="input-group-text"><i class="bi bi-person-lines-fill"></i></div>
-            <select name="campus" id="campus" class="form-select validate">
-                @foreach ($campuses_select as $item)
-                    <option value="{{$item->code}}" >{{$item->description}}</option>
+            <select name="office" id="office" class="form-control form-select">
+                <option value="">Select Option</option>
+                @foreach ($office_select as $item)
+                <option value="{{$item->code}}" {{ (isset($office) && $office == $item->code)? "selected":"" }} >{{$item->description}}</option>
                 @endforeach
             </select>
             <div class="valid-feedback">
                 Looks good!
             </div>
             <div class="invalid-feedback">
-                Please select a Campus.
+                Please select a Office.
             </div>
         </div>
     </div>
 
     <div class="col-md-6 col-sm-12">
-        <label>Courses<span class="text-danger">*</span></label>
+        <label>Department<span class="text-danger">*</span></label>
         <div class="input-group">
             <div class="input-group-text"><i class="bi bi-person-lines-fill"></i></div>
-            <select name="courses" id="courses" class="form-select validate">
-                @foreach ($courses_select as $item)
-                    <option value="{{$item->code}}">{{$item->description}}</option>
-                @endforeach
-            </select>
-            <div class="valid-feedback">
-                Looks good!
-            </div>
-            <div class="invalid-feedback">
-                Please select a Courses.
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-6 col-sm-12">
-        <label>Year Level<span class="text-danger">*</span></label>
-        <div class="input-group">
-            <div class="input-group-text"><i class="bi bi-person-lines-fill"></i></div>
-            <select name="year_level" id="year_level" class="form-select validate">
-                @foreach ($yearlevels_select as $item)
-                    <option value="{{$item->code}}">{{$item->description}}</option>
-                @endforeach
-            </select>
-            <div class="valid-feedback">
-                Looks good!
-            </div>
-            <div class="invalid-feedback">
-                Please select a Year Level.
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-6 col-sm-12">
-        <label>Sections<span class="text-danger">*</span></label>
-        <div class="input-group">
-            <div class="input-group-text"><i class="bi bi-person-lines-fill"></i></div>
-            <select name="section" id="section" class="form-select validate">
-                @foreach ($sections_select as $item)
-                    <option value="{{$item->code}}">{{$item->description}}</option>
+            <select name="department" id="department" class="form-control form-select">
+                <option value="">Select Option</option>
+                @foreach ($department_select as $item)
+                <option value="{{$item->code}}" {{ (isset($department) && $department == $item->code)? "selected":"" }} >{{$item->description}}</option>
                 @endforeach
             </select>
             <div class="valid-feedback">
@@ -174,9 +140,9 @@
     });
 
     $("#saveModal").unbind("click").click(function() {
-        bootstrapForm($("#studentForm"));
+        bootstrapForm($("#employeeForm"));
         
-        var formdata = $("#studentForm").serialize();
+        var formdata = $("#employeeForm").serialize();
     
         swal.fire({
             html: '<h4>Loading...</h4>',
@@ -186,7 +152,7 @@
         });
 
         $.ajax({
-            url: "{{ url('student/add') }}",
+            url: "{{ url('employee/add') }}",
             type: "POST",
             data: formdata,
             dataType: 'json',
@@ -199,7 +165,7 @@
                         time: 2500
                     })
                     $("#modalclose").click();
-                    StudentList();
+                    location.reload();
                 }else if (response.status == 2) {
                     Swal.fire({
                         icon: 'info',

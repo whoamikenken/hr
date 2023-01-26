@@ -9,6 +9,7 @@ use DateInterval;
 use App\Models\User;
 use App\Models\Extras;
 use App\Mail\MailNotify;
+use App\Models\Employee;
 use App\Models\Applicant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -48,11 +49,8 @@ class EmployeeController extends Controller
 
         $data['uid'] = $formFields['uid'];
 
-        $data['campuses_select'] = DB::table('campuses')->get();
-        $data['courses_select'] = DB::table('courses')->get();
-        $data['yearlevels_select'] = DB::table('yearlevels')->get();
-        $data['sections_select'] = DB::table('sections')->get();
-        $data['users_select'] = DB::table('users')->where("user_type", "Professor")->get();
+        $data['office_select'] = DB::table('offices')->get();
+        $data['department_select'] = DB::table('departments')->get();
 
         // dd($data);
         return view('user/employee_modal', $data);
@@ -159,28 +157,34 @@ class EmployeeController extends Controller
             'fname' => ['required'],
             'lname' => ['required'],
             'mname' => ['required'],
-            'campus' => ['required'],
+            'office' => ['required'],
             'contact' => ['required'],
-            'year_level' => ['required'],
-            'course' => ['required'],
-            'section' => ['required'],
+            'department' => ['required'],
             'email' => ['required'],
-            'adviser' => ['required']
         ]);
 
-        $fullname = $formFields['fname'] . " " . $formFields['lname'];
-        $dataSMS = array(
-            'username' => env('SMS_USER'),
-            'password' => env('SMS'),
-            'port' => 2,
-            'recipients' => $formFields['contact'],
-            'sms' => "Hello " . $fullname . "! You're successfully been registered please wait for the admin to verify your account."
-        );
+        $userData = $formFields;
+        
+        $formFields['isactive'] = "Active";
 
-        $reponse = Extras::sendRequest("http://122.54.191.90:8085/goip_send_sms.html", "get", $dataSMS);
+        $fullname = $formFields['fname'] . " " . $formFields['lname'];
+
+        unset($userData['employee_id']);
+        unset($userData['mname']);
+        $userData['name'] = $fullname;
+        $userData['username'] = $formFields['employee_id'];
+        $userData['user_type'] = "Employee";
+        $userData['status'] = "verified";
+        $userData['read'] = Extras::getAccessListUserType("read", "Employee");
+        $userData['delete'] =  Extras::getAccessListUserType("delete", "Employee");
+        $userData['edit'] =  Extras::getAccessListUserType("edit", "Employee");
+        $userData['add'] =  Extras::getAccessListUserType("add", "Employee");
+        $userData['password'] = bcrypt($formFields['employee_id']);
+        User::create($userData);
+
         unset($formFields['uid']);
-        Applicant::create($formFields);
-        $return = array('status' => 1, 'msg' => 'Successfully added applicant', 'title' => 'Success!');
+        Employee::create($formFields);
+        $return = array('status' => 1, 'msg' => 'Successfully added employee', 'title' => 'Success!');
 
         return response()->json($return);
     }

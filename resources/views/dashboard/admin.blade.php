@@ -265,7 +265,7 @@ let delayed;
                       },
                       title: {
                         display: true,
-                        text: 'Campus'
+                        text: 'Offices'
                       }
                     }
                   }

@@ -107,6 +107,8 @@ class UserController extends Controller
             'uid' => ['required'],
         ]);
 
+        $readAccess = $editAccess = $addAccess = $delAccess = array();
+
         if ($formFields['uid'] != "add") {
             $data['record'] = DB::table('users')->where('id', $formFields['uid'])->get();
             $data = $data['record'][0];

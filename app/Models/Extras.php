@@ -150,6 +150,11 @@ class Extras extends Model
         return DB::table('users')->where('username', $username)->value($code);
     }
 
+    public static function getAccessListUserType(String $code = null, String $type = null)
+    {
+        return DB::table('usertype')->where('code', $type)->value($code);
+    }
+
     public static function filledDiploma(String $applicant_id = null)
     {
         $diplomaResult =  DB::table('diplomas')->where('applicant_id', $applicant_id)->get();
