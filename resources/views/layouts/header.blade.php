@@ -781,5 +781,9 @@ $mainmenu = 1;
             minutes: parseInt(minutes, 10),
         };
     }
+
+    $("#modal-view").on("hidden.bs.modal", function () {
+        $("#modal-view").find(".modal-footer").html('<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modalclose">Close</button><button type="button" class="btn btn-primary" id="saveModal">Save</button>');
+    });
 </script>
 </html>
