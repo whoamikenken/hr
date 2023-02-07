@@ -56,14 +56,15 @@ class AuthController extends Controller
     {
         $request->validate([
             'employee_id' => 'required|string',
+            'date' => 'required|string',
         ]);
         $timeIn = $timeOut = "";
         $empID = $request->employee_id;
-        $today = date("Y-m-d");
+        $date = $request->date;
 
-        $timeIn = DB::table('timesheets_trail_history')->where("employee_id", $empID)->where(DB::raw('date(log_time)'), $today)->where("log_type", "IN")->value("log_time");
+        $timeIn = DB::table('timesheets_trail_history')->where("employee_id", $empID)->where(DB::raw('date(log_time)'), $date)->where("log_type", "IN")->value("log_time");
 
-        $timeOut = DB::table('timesheets_trail_history')->where("employee_id", $empID)->where(DB::raw('date(log_time)'), $today)->where("log_type", "OUT")->value("log_time");
+        $timeOut = DB::table('timesheets_trail_history')->where("employee_id", $empID)->where(DB::raw('date(log_time)'), $date)->where("log_type", "OUT")->value("log_time");
 
         if(!$timeIn){
             $timeIn = "No Time In";
