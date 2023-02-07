@@ -18,7 +18,7 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login','register','saveLogs', 'saveWorkTask']]);
+        $this->middleware('auth:api', ['except' => ['login','register','saveLogs', 'saveWorkTask', 'getAttendance']]);
     }
 
     public function login(Request $request)
@@ -49,6 +49,34 @@ class AuthController extends Controller
             'latitude' => $workPara->latitude,
             'longitude' => $workPara->longitude,
             'token' => $token
+        ]);
+    }
+
+    public function getAttendance(Request $request)
+    {
+        $request->validate([
+            'employee_id' => 'required|string',
+        ]);
+        $timeIn = $timeOut = "";
+        $empID = $request->employee_id;
+        $today = date("Y-m-d");
+
+        $timeIn = DB::table('timesheets_trail_history')->where("employee_id", $empID)->where(DB::raw('date(log_time)'), $today)->where("log_type", "IN")->value("log_time");
+
+        $timeOut = DB::table('timesheets_trail_history')->where("employee_id", $empID)->where(DB::raw('date(log_time)'), $today)->where("log_type", "OUT")->value("log_time");
+
+        if(!$timeIn){
+            $timeIn = "No Time In";
+        }
+
+        if (!$timeOut) {
+            $timeOut = "No Time Out";
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'time_in' => $timeIn,
+            'time_out' => $timeOut,
         ]);
     }
 
