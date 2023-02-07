@@ -187,7 +187,7 @@
                                             <h5 class="card-title">{{$item->fname." ".$item->lname}} <span class="float-end">{{$counter}}</span></h5>
                                             Department: {{$item->department}}<br>
                                             Office: {{$item->office}}<br>
-                                            Attendance: {{$item->total_att}}
+                                            Work Tasks: {{$item->total_att}}
                                         </div>
                                     </div>
                                 </div>

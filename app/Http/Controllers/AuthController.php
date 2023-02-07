@@ -39,13 +39,15 @@ class AuthController extends Controller
 
         $user = Auth::guard('api')->user();
         $employeeDetail = DB::table('employees')->where("employee_id", $credentials['username'])->get();
-
+        $workPara = DB::table('work_paras')->first();
 
         return response()->json([
             'status' => 'success',
             'image' => Storage::disk("s3")->url($employeeDetail[0]->user_profile),
             'name' => $employeeDetail[0]->fname." ". $employeeDetail[0]->lname,
             'employee_id' => $employeeDetail[0]->employee_id,
+            'latitude' => $workPara->latitude,
+            'longitude' => $workPara->longitude,
             'token' => $token
         ]);
     }

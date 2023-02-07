@@ -72,7 +72,7 @@ class HomeController extends Controller
         $data['employee_present'] = Extras::countPresentEmployee();
         $data['employee_absent'] = Extras::countAbsentEmployee();
         $data['student_count'] = Extras::countAbsentEmployee();
-        $data['top_employee'] = DB::table('users')->select("*", DB::raw('(SELECT COUNT(*) FROM timesheets WHERE employee_id = users.username) as total_att'))->where("user_type", "=", 'Employee')->orderBy("total_att", "desc")->paginate(9);
+        $data['top_employee'] = DB::table('users')->select("*", DB::raw('(SELECT COUNT(*) FROM work_from_homes WHERE employee_id = users.username AND status = "APPROVE") as total_att'))->where("user_type", "=", 'Employee')->orderBy("total_att", "desc")->paginate(9);
         foreach ($data['top_employee'] as $key => $value) {
             $office = DB::table('employees')->where('employee_id', $value->username)->value('office');
             $department = DB::table('employees')->where('employee_id', $value->username)->value('department');

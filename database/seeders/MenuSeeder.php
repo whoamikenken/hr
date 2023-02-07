@@ -283,5 +283,21 @@ class MenuSeeder extends Seeder
             'description' => "List of employee logs"
         ]);
 
+        Menu::factory()->create([
+            'root' => '5',
+            'menu_id' => function () {
+                $max = Menu::count('id'); // returns 0 if no records exist.
+                return $max + 1;
+            },
+            'order' => function () {
+                $maxOrder = Menu::where('root', '=', '6')->count('order'); // returns 0 if no records exist.
+                return $maxOrder + 1;
+            },
+            'title' => 'Work Parameter',
+            'link' => 'config/workpara',
+            'icon' => 'pin-map',
+            'description' => "Setup for work parameter"
+        ]);
+
     }
 }

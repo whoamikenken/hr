@@ -242,22 +242,10 @@ class WorkFromHomeController extends Controller
 
         $expensesData = DB::table('work_from_homes')->where('id', $formFields['code'])->first();
 
-        // Get Budget ID
-        $budget_id = DB::table('work_from_homes')->where('id', $formFields['code'])->value("budget");
-
-        // Revert Money To Budget If Claimed
-        if ($expensesData->claim_status == "CLAIMED") {
-            Extras::processBudgetClaiming($budget_id, $expensesData->expense, "revert");
-            Extras::processMaidExpensesDelete($expensesData->expense, $formFields['code']);
-        } else {
-            // delete Other Maid Expenses DAta
-            Extras::processMaidExpensesDelete($expensesData->expense, $formFields['code'], false);
-        }
-
         $delete = DB::table('work_from_homes')->where('id', '=', $formFields['code'])->delete();
 
         if ($delete) {
-            $return = array('status' => 1, 'msg' => 'Successfully deleted claim', 'title' => 'Success!');
+            $return = array('status' => 1, 'msg' => 'Successfully deleted work task', 'title' => 'Success!');
         }
 
         return response()->json($return);
@@ -278,10 +266,10 @@ class WorkFromHomeController extends Controller
             $formFields = $validator['data'];
         }
 
-        $updateClaimData = array();
-        $updateClaimData = array('read_employee' => 1);
+        $updateWFHData = array();
+        $updateWFHData = array('read_employee' => 1);
 
-        DB::table('work_from_homes')->where('id', $formFields['uid'])->update($updateClaimData);
+        DB::table('work_from_homes')->where('id', $formFields['uid'])->update($updateWFHData);
         $counter = DB::table('work_from_homes')->where("employee_id", Auth::user()->username)->where("read_employee", 0)->count();
         if ($counter == 0) {
             $return['title'] = "none";
@@ -306,10 +294,10 @@ class WorkFromHomeController extends Controller
             $formFields = $validator['data'];
         }
 
-        $updateClaimData = array();
-        $updateClaimData = array('read_office_head' => 1);
+        $updateWFHData = array();
+        $updateWFHData = array('read_office_head' => 1);
 
-        DB::table('work_from_homes')->where('id', $formFields['uid'])->update($updateClaimData);
+        DB::table('work_from_homes')->where('id', $formFields['uid'])->update($updateWFHData);
         $counter = DB::table('work_from_homes')->where("office_head", Auth::user()->username)->where("status", "PENDING")->where("read_office_head", 0)->count();
         if($counter == 0){
             $return['title'] = "none";

@@ -28,6 +28,7 @@ use App\Http\Controllers\TablecolumnController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\WorkFromHomeController;
 use App\Http\Controllers\BatchScheduleController;
+use App\Http\Controllers\WorkParaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -104,6 +105,12 @@ Route::post('/usertype/delete', [UsertypeController::class, 'delete']);
 Route::post('/tablecolumn/table', [TablecolumnController::class, 'getTable'])->withoutMiddleware([VerifyCsrfToken::class]);
 Route::post('/tablecolumn/getModal', [TablecolumnController::class, 'getModal'])->withoutMiddleware([VerifyCsrfToken::class]);
 Route::post('/tablecolumn/add', [TablecolumnController::class, 'store']);
+
+// Work Parameter
+Route::post('/workpara/table', [WorkParaController::class, 'getTable'])->withoutMiddleware([VerifyCsrfToken::class]);
+Route::post('/workpara/getModal', [WorkParaController::class, 'getModal'])->withoutMiddleware([VerifyCsrfToken::class]);
+Route::post('/workpara/add', [WorkParaController::class, 'store']);
+Route::post('/wfh/delete', [WorkParaController::class, 'delete']);
 
 // Reports
 Route::post('/report/getModalFilter', [ReportsController::class, 'getModalFilter'])->withoutMiddleware([VerifyCsrfToken::class]);
