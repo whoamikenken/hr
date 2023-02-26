@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('department', 100)->nullable()->default('NULL');
             $table->string('color', 100)->nullable();
             $table->string('head_id', 100)->nullable();
+            $table->string('work_parameter', 100)->nullable();
             $table->timestamp('updated_at')->nullable()->useCurrent();
             $table->string('modified_by', 50)->nullable()->default('NULL');
             $table->timestamp('created_at')->nullable()->useCurrent();

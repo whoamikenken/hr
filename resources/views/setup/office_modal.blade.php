@@ -51,6 +51,25 @@
     </div>
 
     <div class="col-md-6 col-sm-12">
+        <label>Work Parameter<span class="text-danger">*</span></label>
+        <div class="input-group">
+            <div class="input-group-text"><i class="bi bi-pencil-fill"></i></div>
+            <select name="work_parameter" id="work_parameter" class="form-select">
+                <option value="">Select Work Parameter</option>
+                @foreach ($work_parameter_select as $item)
+                <option value="{{$item->id}}" {{ (isset($work_parameter) && $work_parameter == $item->id)? "selected":""}} >{{$item->description}}</option>
+                @endforeach
+            </select>
+            <div class="valid-feedback">
+                Looks good!
+            </div>
+            <div class="invalid-feedback">
+                Please input a Work Parameter.
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-sm-12">
         <label>Office Head<span class="text-danger">*</span></label>
         <div class="input-group">
             <div class="input-group-text"><i class="bi bi-pencil-fill"></i></div>

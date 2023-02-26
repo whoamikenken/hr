@@ -88,6 +88,7 @@ class AuthController extends Controller
         $image = base64_decode($base64);
         $dateLog = date("Y-m-d", substr($log['time'], 0, 10));
         $lastLog = Timesheet::getLastlogs($log['employee_id'], $dateLog);
+        $logType = "";
         // dd($lastLog);
 
         $timesheetHistoryData = array();
@@ -101,7 +102,9 @@ class AuthController extends Controller
         if($lastLog['log_type'] == "new"){
             $timesheetHistoryData['log_type'] = "IN";
             $timesheetTrailData = $timesheetHistoryData;
-            DB::table('timesheets_trail')->insert($timesheetTrailData);
+
+            $logType = "IN";
+            // DB::table('timesheets_trail')->insert($timesheetTrailData);
         }elseif($lastLog['log_type'] == "IN"){
             $timesheetHistoryData['log_type'] = "OUT";
             $timesheetTrailData = $timesheetHistoryData;
@@ -118,9 +121,15 @@ class AuthController extends Controller
             $timesheetData['type'] = $lastLog['machine_type']." - ". $timesheetHistoryData['machine_type'];
             $timesheetData['username'] = "Webcheckin";
 
-            DB::table('timesheets_trail')->insert($timesheetTrailData);
-            DB::table('timesheets')->insert($timesheetData);
-            DB::table('timesheets_trail')->where('employee_id', '=', $log['employee_id'])->where(DB::raw('date(log_time)'), $dateLog)->delete();
+            $logType = "OUT";
+            // DB::table('timesheets_trail')->insert($timesheetTrailData);
+            // DB::table('timesheets')->insert($timesheetData);
+            // DB::table('timesheets_trail')->where('employee_id', '=', $log['employee_id'])->where(DB::raw('date(log_time)'), $dateLog)->delete();
+        }elseif($lastLog['log_type'] == "OUT"){
+            return response()->json([
+                'status' => 'over'
+            ]);
+            die;
         }
         $imageLink = "";
         $titleImage = "user_logs/" . $log['employee_id'] . '-' . $log['time'] . '.png';
@@ -137,7 +146,8 @@ class AuthController extends Controller
         DB::table('timesheets_trail_history')->insert($timesheetHistoryData);
 
         return response()->json([
-            'status' => 'success'
+            'status' => 'success',
+            'log_type' => $logType
         ]);
     }
 

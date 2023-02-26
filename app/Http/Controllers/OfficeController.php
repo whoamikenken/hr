@@ -52,9 +52,11 @@ class OfficeController extends Controller
             $data['color'] = Extras::rgb_to_hex($data['color']);
         }
         
+
+        $data['work_parameter_select'] = Extras::getWorkParameterForDropdown();
+
         $data['uid'] = $formFields['uid'];
         $data['department_select'] = DB::table('departments')->get();
-        
         return view('setup/office_modal', $data);
     }
     

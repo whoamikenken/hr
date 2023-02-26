@@ -357,6 +357,7 @@ class EmployeeController extends Controller
 
     public function updateEmployeeData(Request $request)
     {
+        // dd(Storage::disk('s3')->put('test.txt', "AMAZONG BVUCKET"));
         $return = array('status' => 0, 'msg' => 'Error', 'title' => 'Error!');
         // dd($request->input());
         $employee_id = $request->input("employee_id");
@@ -368,6 +369,9 @@ class EmployeeController extends Controller
                 Storage::disk('s3')->delete($users->{$column});
             }
             $value = $request->file('file')->store($column, 's3');
+            
+            // $daw = Storage::disk('s3')->delete("user_logs/0001-1676866711.png");
+            
         }
 
 
