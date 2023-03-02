@@ -56,7 +56,7 @@ class WorkParaController extends Controller
             $return = array('status' => 1, 'msg' => 'Successfully added work parameter', 'title' => 'Success!');
         } else {
             $formFields['updated_at'] = Carbon::now();
-            $formFields['modified_by'] = Auth::id();
+            // $formFields['modified_by'] = Auth::id();
             $id = $formFields['uid'];
             unset($formFields['uid']);
             DB::table("work_paras")->where('id', $id)->update($formFields);

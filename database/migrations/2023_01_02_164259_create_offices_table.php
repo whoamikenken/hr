@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('created_by', 50)->nullable()->default('NULL');
         });
     }
+    
 
     /**
      * Reverse the migrations.

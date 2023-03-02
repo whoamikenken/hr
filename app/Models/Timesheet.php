@@ -13,7 +13,7 @@ class Timesheet extends Model
     public static function getLastlogs($employeeid, $date)
     {   
         $return['log_type'] = "new";
-        $query = DB::table('timesheets_trail')->select("log_type", "log_time","ip","location","machine_type")->where(DB::raw('date(log_time)'), $date)->where('employee_id', $employeeid)->get();
+        $query = DB::table('timesheets_trail_history')->select("log_type", "log_time","ip","location","machine_type")->where(DB::raw('date(log_time)'), $date)->where('employee_id', $employeeid)->get();
         foreach ($query as $row) {
             $return['log_type'] = $row->log_type;
             $return['log_time'] = $row->log_time;

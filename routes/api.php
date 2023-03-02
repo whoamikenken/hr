@@ -32,4 +32,5 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('logs', 'saveLogs');
     Route::post('task', 'saveWorkTask');
     Route::post('attendance', 'getAttendance');
+    Route::post('getEmpData', 'getEmpData');
 });

@@ -18,7 +18,28 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login','register','saveLogs', 'saveWorkTask', 'getAttendance']]);
+        $this->middleware('auth:api', ['except' => ['login','register','saveLogs', 'saveWorkTask', 'getAttendance', 'getEmpData']]);
+    }
+
+    public function getEmpData(Request $request)
+    {
+        $request->validate([
+            'employeeid' => 'required|string',
+        ]);
+        $credentials = $request->only('employeeid');
+
+        $employeeDetail = DB::table('employees')->where("employee_id", $credentials['employeeid'])->get();
+        $workParamID = DB::table('offices')->where("code", $employeeDetail[0]->office)->value('work_parameter');
+        $workPara = DB::table('work_paras')->where("id", $workParamID)->first();
+
+        return response()->json([
+            'status' => 'success',
+            'image' => Storage::disk("s3")->url($employeeDetail[0]->user_profile),
+            'name' => $employeeDetail[0]->fname . " " . $employeeDetail[0]->lname,
+            'employee_id' => $employeeDetail[0]->employee_id,
+            'latitude' => $workPara->latitude,
+            'longitude' => $workPara->longitude
+        ]);
     }
 
     public function login(Request $request)
@@ -39,7 +60,8 @@ class AuthController extends Controller
 
         $user = Auth::guard('api')->user();
         $employeeDetail = DB::table('employees')->where("employee_id", $credentials['username'])->get();
-        $workPara = DB::table('work_paras')->first();
+        $workParamID = DB::table('offices')->where("code", $employeeDetail[0]->office)->value('work_parameter');
+        $workPara = DB::table('work_paras')->where("id", $workParamID)->first();
 
         return response()->json([
             'status' => 'success',
@@ -102,9 +124,9 @@ class AuthController extends Controller
         if($lastLog['log_type'] == "new"){
             $timesheetHistoryData['log_type'] = "IN";
             $timesheetTrailData = $timesheetHistoryData;
-
             $logType = "IN";
-            // DB::table('timesheets_trail')->insert($timesheetTrailData);
+            
+            DB::table('timesheets_trail')->insert($timesheetTrailData);
         }elseif($lastLog['log_type'] == "IN"){
             $timesheetHistoryData['log_type'] = "OUT";
             $timesheetTrailData = $timesheetHistoryData;
@@ -122,12 +144,13 @@ class AuthController extends Controller
             $timesheetData['username'] = "Webcheckin";
 
             $logType = "OUT";
-            // DB::table('timesheets_trail')->insert($timesheetTrailData);
-            // DB::table('timesheets')->insert($timesheetData);
-            // DB::table('timesheets_trail')->where('employee_id', '=', $log['employee_id'])->where(DB::raw('date(log_time)'), $dateLog)->delete();
+            DB::table('timesheets_trail')->insert($timesheetTrailData);
+            DB::table('timesheets')->insert($timesheetData);
+            DB::table('timesheets_trail')->where('employee_id', '=', $log['employee_id'])->where(DB::raw('date(log_time)'), $dateLog)->delete();
         }elseif($lastLog['log_type'] == "OUT"){
             return response()->json([
-                'status' => 'over'
+                'status' => 'over',
+                'log_type' => ''
             ]);
             die;
         }
@@ -154,6 +177,7 @@ class AuthController extends Controller
     public function saveWorkTask(Request $request)
     {
         $log = $request->input();
+        $today = date("Y-m-d");
         $base64 = Extras::fix_base64($log['base_64']);
         $image = base64_decode($base64);
 
@@ -162,6 +186,16 @@ class AuthController extends Controller
         $WFHData['purpose'] = $log['purpose'];
         $WFHData['date'] = $log['date'];
         $WFHData['work_done'] = $log['work_done'];
+
+        $record = DB::table('work_from_homes')->where('employee_id', '=', $log['employee_id'])->where(DB::raw('date(created_at)'), $today)->first();
+        
+        if(!empty($record)){
+            return response()->json([
+                'status' => 'over',
+                'log_type' => ''
+            ]);
+            die;
+        }
 
         $approverOffice = Extras::getApproverHead($log['employee_id']);
         if (!$approverOffice) {
