@@ -71,6 +71,7 @@ $info .= "
                 $info .= "<th style='padding: 5px;text-align: center;font-size: 12px;font-weight: bold;'>". $value."</th>";
             }
             $info .= "<th style='padding: 5px;text-align: center;font-size: 12px;font-weight: bold;'>Schedule</th>";
+            $info .= "<th style='padding: 5px;text-align: center;font-size: 12px;font-weight: bold;'>Date</th>";
             $info .= "<th style='padding: 5px;text-align: center;font-size: 12px;font-weight: bold;'>Time In</th>";
             $info .= "<th style='padding: 5px;text-align: center;font-size: 12px;font-weight: bold;'>Time Out</th>";
             $info .= "<th style='padding: 5px;text-align: center;font-size: 12px;font-weight: bold;'>Late</th>";
@@ -93,6 +94,7 @@ if(count($result) > 0 ){
                         }
                     }
                     $info .= "<td style='padding: 2px;text-align: center;font-size: 13px;'>" . $value->starttime . " - " . $value->endtime . "</td>";
+                    $info .= "<td style='padding: 2px;text-align: center;font-size: 13px;'>" . date("Y-m-d", strtotime($value->created_at)) . "</td>";
                     $info .= "<td style='padding: 2px;text-align: center;font-size: 13px;'>" . $value->time_in . "</td>";
                     $info .= "<td style='padding: 2px;text-align: center;font-size: 13px;'>" . $value->time_out . "</td>";
                     $info .= "<td style='padding: 2px;text-align: center;font-size: 13px;'>" . $value->late . " Mins</td>";
