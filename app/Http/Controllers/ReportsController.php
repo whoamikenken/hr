@@ -124,6 +124,7 @@ class ReportsController extends Controller
                 $otherData = Timesheet::employeeLogsData($value->employee_id, $value->time_in, $value->time_out);
                 $data['result'][$key]->status = $otherData['status'];
                 $data['result'][$key]->late = $otherData['minutesLate'];
+                $data['result'][$key]->date = $data['result'][$key]->time_in;
                 $data['result'][$key]->starttime = Extras::convertTo12HourFormatTIME($otherData['starttime']);
                 $data['result'][$key]->endtime = Extras::convertTo12HourFormatTIME($otherData['endtime']);
                 $data['result'][$key]->time_in = Extras::convertTo12HourFormatYMD($data['result'][$key]->time_in);

@@ -94,7 +94,7 @@ if(count($result) > 0 ){
                         }
                     }
                     $info .= "<td style='padding: 2px;text-align: center;font-size: 13px;'>" . $value->starttime . " - " . $value->endtime . "</td>";
-                    $info .= "<td style='padding: 2px;text-align: center;font-size: 13px;'>" . date("Y-m-d", strtotime($value->created_at)) . "</td>";
+                    $info .= "<td style='padding: 2px;text-align: center;font-size: 13px;'>" . date("Y-m-d", strtotime($value->date)) . "</td>";
                     $info .= "<td style='padding: 2px;text-align: center;font-size: 13px;'>" . $value->time_in . "</td>";
                     $info .= "<td style='padding: 2px;text-align: center;font-size: 13px;'>" . $value->time_out . "</td>";
                     $info .= "<td style='padding: 2px;text-align: center;font-size: 13px;'>" . $value->late . " Mins</td>";
