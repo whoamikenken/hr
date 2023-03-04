@@ -103,7 +103,7 @@ if(count($result) > 0 ){
         $info .= "</tr>";
         }
 }else{
-    $info .= "<tr><td colspan='".count($edatalist)."' style='text-align:center;font-size:20px;'>No Data</td></tr>";
+    $info .= "<tr><td colspan='".count($edatalist) + 6 ."' style='text-align:center;font-size:20px;'>No Data</td></tr>";
 }
 $info .= "      
             </tbody>

@@ -40,7 +40,7 @@ class Timesheet extends Model
             
             $checkerLate['starttime'] = $query->starttime;
             $checkerLate['endtime'] = $query->endtime;
-            // dd($checkerLate);
+            
         }
         
         return $checkerLate;
@@ -53,19 +53,21 @@ class Timesheet extends Model
         $tardyStartTime = DateTime::createFromFormat('H:i:s', $tardyStartTime);
         $absentStartTime = DateTime::createFromFormat('H:i:s', $absentStartTime);
         $lateTime = $endTime->diff($startTime);
-
+        
         if ($lateTime->invert === 1) {
             // user arrived after start time
-            $tardyTime = $tardyStartTime->diff($startTime)->i;
-            $absentTime = $absentStartTime->diff($startTime)->i;
+            $tardyTime = $tardyStartTime->diff($startTime);
+            $tardyTimeMins = $tardyTime->h * 60 + $tardyTime->i;
+            $absentTime = $absentStartTime->diff($startTime);
+            $absentTimeMins = $absentTime->h * 60 + $absentTime->i;
             $minutesLate = $lateTime->h * 60 + $lateTime->i;
-
-            if ($minutesLate > $absentTime) {
-                // user arrived more than the absent start time
-                return array("status" => "Absent", "minutesLate" => $minutesLate);
-            } elseif ($minutesLate > $tardyTime) {
+            // dd($minutesLate > $tardyTimeMins);
+            if ($minutesLate < $tardyTimeMins) {
                 // user arrived more than the tardy start time
                 return array("status" => "Tardy", "minutesLate" => $minutesLate);
+            } elseif ($minutesLate < $absentTimeMins) {
+                // user arrived more than the absent start time
+                return array("status" => "Absent", "minutesLate" => $minutesLate);
             } else {
                 // user arrived less than or equal to the tardy start time
                 return array("status" => "On Time", "minutesLate" => $minutesLate);

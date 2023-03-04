@@ -105,7 +105,7 @@ class ReportsController extends Controller
             $table = "timesheets";
             // DB::enableQueryLog();
             if ($table) {
-                $data['result'] = DB::table($table)->join('employees', 'employees.employee_id', '=', 'timesheets.employee_id')->where($where)->orderBy('timesheets.time_in', 'desc')->get();
+                $data['result'] = DB::table($table)->join('employees', 'employees.employee_id', '=', 'timesheets.employee_id')->whereBetween(DB::raw("date(`time_in`)"), $between)->where($where)->orderBy('timesheets.time_in', 'desc')->get();
             }
 
             $data['edatalist']['fullname'] = Extras::showDesc('fullname');
