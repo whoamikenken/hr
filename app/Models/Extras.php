@@ -464,7 +464,7 @@ class Extras extends Model
         $colClass = "";
         if ($desc == "General Information") {
             $colClass = "GenInfo";
-            $arrcol = array("employee_id", "employee_code", "fullname", "fname", "lname", "mname", "department", "office",  "age", "date_of_birth", "height", "weight", "family_contact_name","gender","status", "date_applied", "user_profile");
+            $arrcol = array("user_profile", "employee_id", "employee_code", "fullname", "fname", "lname", "mname", "department", "office",  "age", "date_of_birth", "height", "weight", "family_contact_name","gender","status", "date_applied");
         } elseif ($desc == "Contact Information") {
             $colClass = "ConInfo";
             $arrcol = array("email", "contact", "address", "marital_status", "religion", "family_contact_name", "family_contact", "isactive");
