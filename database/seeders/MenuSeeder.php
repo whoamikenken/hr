@@ -284,6 +284,22 @@ class MenuSeeder extends Seeder
         ]);
 
         Menu::factory()->create([
+            'root' => '0',
+            'menu_id' => function () {
+                $max = Menu::count('id'); // returns 0 if no records exist.
+                return $max + 1;
+            },
+            'order' => function () {
+                $maxOrder = Menu::where('root', '=', '0')->count('order'); // returns 0 if no records exist.
+                return $maxOrder + 1;
+            },
+            'title' => 'Employee Attendance',
+            'link' => 'logs/attendance',
+            'icon' => 'person-lines-fill',
+            'description' => "List of employee attendance"
+        ]);
+
+        Menu::factory()->create([
             'root' => '5',
             'menu_id' => function () {
                 $max = Menu::count('id'); // returns 0 if no records exist.

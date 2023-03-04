@@ -197,17 +197,17 @@ class Extras extends Model
 
     public static function getNoAdd()
     {
-        return array(999, 13, 14, 1, 5, 801, 802, 803, 804,17);
+        return array(999, 13, 14, 1, 5, 801, 802, 803, 804,17,19);
     }
 
     public static function getNoDel()
     {
-        return array(999, 13, 14, 1, 5, 801, 802, 803, 804,17);
+        return array(999, 13, 14, 1, 5, 801, 802, 803, 804,17,19);
     }
 
     public static function getNoEdit()
     {
-        return array(5,999,1,13,14,17);
+        return array(5,999,1,13,14,17,19);
     }
 
     public static function requestToEmpsys($link, $type = 'get', $data = null, $token = null){
@@ -361,12 +361,6 @@ class Extras extends Model
         return $output;
     }
 
-    public static function getUserForDropdown($where)
-    {
-        $data = DB::table('budgets')->where($where)->get();
-        return $data;
-    }
-
     public static function getApproverHead($employeeID)
     {
         $office = DB::table('employees')->where('employee_id', '=', $employeeID)->value("office");
@@ -420,6 +414,40 @@ class Extras extends Model
         $data = DB::table('work_paras')->where($where)->get();
         return $data;
     }
+
+    public static function showDesc($data)
+    {
+        $return = array(
+            "employee_id" => "Employee ID",
+            "fullname" => "Name",
+            "lname" => "Last Name",
+            "fname" => "First Name",
+            "mname" => "Middle Name",
+            "contact" => "Contact",
+            "address" => "Address",
+            "family_contact_name" => "Family Contact Name",
+            "family_contact" => "Family Contact",
+            "gender" => "Gender",
+            "email" => "Email",
+            "marital_status" => "Marital Status",
+            "office" => "Office",
+            "religion" => "Religion",
+            "age" => "Age",
+            "height" => "Height",
+            "weight" => "Weight",
+            "status" => "Status",
+            "employee_code" => "Employee RFID",
+            "isactive" => "Is Active?",
+            "date_applied" => "Date Applied",
+            "date_of_birth" => "Date Of Birth",
+            "department" => "Department",
+            "sales_manager" => "Sales",
+            "date_applied" => "Date Applied",
+            "user_profile" => "Face Photo",
+        );
+
+        return $return[$data];
+    }
     
     public static function CheckIfApprover($employee_id)
     {
@@ -428,6 +456,48 @@ class Extras extends Model
             return true;
         }else{
             return false;
+        }
+    }
+
+    public static function returnEmployeeCols($desc = "")
+    {
+        $colClass = "";
+        if ($desc == "General Information") {
+            $colClass = "GenInfo";
+            $arrcol = array("employee_id", "employee_code", "fullname", "fname", "lname", "mname", "department", "office",  "age", "date_of_birth", "height", "weight", "family_contact_name","gender","status", "date_applied", "user_profile");
+        } elseif ($desc == "Contact Information") {
+            $colClass = "ConInfo";
+            $arrcol = array("email", "contact", "address", "marital_status", "religion", "family_contact_name", "family_contact", "isactive");
+        }
+
+        $return = '<div class="col-md-6 col-sm-12"><h4 class="text-center">' . $desc . '</h4>
+        <div class="form-check"><input class="form-check-input selectAll" tag="' . $colClass . '" type="checkbox"><label class="form-check-label"><b>Select All</b></label></div>';
+
+        foreach ($arrcol as $row) {
+            $col = Extras::showDesc($row);
+            $return .= '<div class="form-check"><input class="form-check-input ' . $colClass . '" type="checkbox" name="edata" value="' . $row . '"><label class="form-check-label">' . $col . '</label></div>';
+        }
+        $return .= "</div>";
+        return $return;
+    }
+
+    public static function convertTo12HourFormatYMD($time)
+    {
+        $dateTime = DateTime::createFromFormat('Y-m-d H:i:s', $time);
+        if ($dateTime === false) {
+            return "00:00";
+        } else {
+            return $dateTime->format('h:i:s A');
+        }
+    }
+
+    public static function convertTo12HourFormatTIME($time)
+    {
+        $dateTime = DateTime::createFromFormat('H:i:s', $time);
+        if ($dateTime === false) {
+            return "00:00";
+        } else {
+            return $dateTime->format('h:i:s A');
         }
     }
 }

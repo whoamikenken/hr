@@ -10,116 +10,37 @@
     <input type="hidden" name="tag" id="tag" value="{{($tag)}}">
     <input type="hidden" name="reportName" id="reportName" value="{{($reportName)}}">
     <div class="col-md-6 col-sm-12">
-        <label style="font-weight:600">Branch</label>
+        <label>Office<span class="text-danger">*</span></label>
         <div class="input-group">
-            <div class="input-group-text"><i class="bi bi-option"></i></div>
-            <select name="branch" id="branch" class="form-select">
-                <option value="" selected>All Branch</option>
-                @foreach ($branch_select as $item)
-                <option value="{{$item->code}}" >{{$item->description}}</option>
-                @endforeach
-            </select>
+            <div class="input-group-text"><i class="bi bi-pencil-fill"></i></div>
+            <select class="office-select office select-predefined" name="office" placeholder="Select Options" data-value="{{ (isset($office))? $office:''}}" data-url="{{ url('getDropdown/dropdownInit') }}" data-table="office"> 
+                            <option value="">Select Office</option>
+                        </select>
             <div class="valid-feedback">
                 Looks good!
             </div>
             <div class="invalid-feedback">
-                Please input.
+                Please input a Department.
             </div>
         </div>
     </div>
+
     <div class="col-md-6 col-sm-12">
-        <label style="font-weight:600">Jobsite</label>
+        <label>Department<span class="text-danger">*</span></label>
         <div class="input-group">
-            <div class="input-group-text"><i class="bi bi-option"></i></div>
-            <select name="jobsite" id="jobsite" class="form-select">
-                <option value="" selected>All Jobsite</option>
-                @foreach ($jobsite_select as $item)
-                <option value="{{$item->code}}" >{{$item->description}}</option>
-                @endforeach
-            </select>
+            <div class="input-group-text"><i class="bi bi-pencil-fill"></i></div>
+            <select class="department-select department select-predefined" name="department" placeholder="Select Options" data-value="{{ (isset($department))? $department:''}}" data-url="{{ url('getDropdown/dropdownInit') }}" data-table="department"> 
+                            <option value="">Select Department</option>
+                        </select>
             <div class="valid-feedback">
                 Looks good!
             </div>
             <div class="invalid-feedback">
-                Please input.
+                Please input a Department.
             </div>
         </div>
     </div>
-    <div class="col-md-6 col-sm-12" {{ $hidden }}>
-        <label style="font-weight:600">Sales</label>
-        <div class="input-group">
-            <div class="input-group-text"><i class="bi bi-option"></i></div>
-            <select name="sales" id="sales" class="form-select">
-                <option value="" selected>All Sales</option>
-                @foreach ($users_select as $item)
-                <option value="{{$item->id}}" >{{$item->lname." ".$item->fname}}</option>
-                @endforeach
-            </select>
-            <div class="valid-feedback">
-                Looks good!
-            </div>
-            <div class="invalid-feedback">
-                Please input.
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 col-sm-12" {{ $hidden }}>
-        <label style="font-weight:600">Applicant</label>
-        <div class="input-group">
-            <div class="input-group-text"><i class="bi bi-option"></i></div>
-            <select name="applicant_id" id="applicant_id" class="form-select">
-                <option value="" selected> {{($tag == "infosheet")? "Select":"All"}} Applicant</option>
-                @foreach ($applicant_select as $item)
-                <option value="{{$item->applicant_id}}" >{{$item->lname." ".$item->fname}}</option>
-                @endforeach
-            </select>
-            <div class="valid-feedback">
-                Looks good!
-            </div>
-            <div class="invalid-feedback">
-                Please input.
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 col-sm-12">
-        <label style="font-weight:600">Biodata Availability</label>
-        <div class="input-group">
-            <div class="input-group-text"><i class="bi bi-option"></i></div>
-            <select name="bio_availability" id="bio_availability" class="form-control form-select">
-                <option value="" >All</option>
-                <option value="Sold" >Sold</option>
-                <option value="Available" >Available</option>
-                <option value="Signed Up" >Signed Up</option>
-                <option value="Pending" >Pending</option>
-                <option value="Backed out" >Backed out</option>
-                <option value="Resell/Push" >Resell/Push</option>
-            </select>
-            <div class="valid-feedback">
-                Looks good!
-            </div>
-            <div class="invalid-feedback">
-                Please input.
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 col-sm-12">
-        <label style="font-weight:600">Account Status</label>
-        <div class="input-group">
-            <div class="input-group-text"><i class="bi bi-person-check"></i></div>
-            <select name="isactive" id="isactive" class="form-control form-select">
-                <option value="" >All</option>
-                <option value="Active">Active</option>
-                <option value="Inactive" {{($tag == "termination")? "selected":""}}>Terminated</option>
-            </select>
-            <div class="valid-feedback">
-                Looks good!
-            </div>
-            <div class="invalid-feedback">
-                Please input.
-            </div>
-        </div>
-    </div>
-    @if ($tag == "hrreport" || $tag == "infosheet")
+    @if ($tag == "hrreport")
     <hr class="mt-4">
     <br>
     <h4 class="text-center p-1">Select Data</h4>
@@ -127,7 +48,22 @@
     echo $showColumn;
     @endphp
     <input type="hidden" name="edatalist" id="edatalist">
-    @elseif ($tag == "departure" || $tag == "deployment")
+    @elseif ($tag != "hrreport")
+    <div class="col-sm-12">
+        <label>Employee<span class="text-danger">*</span></label>
+        <div class="input-group">
+            <div class="input-group-text"><i class="bi bi-pencil-fill"></i></div>
+            <select class="employee-select employee select-predefined" name="employee_id" placeholder="Select Options" data-value="{{ (isset($employee))? $employee:''}}" data-url="{{ url('getDropdown/dropdownInit') }}" data-table="employee"> 
+                            <option value="">Select Employee</option>
+                        </select>
+            <div class="valid-feedback">
+                Looks good!
+            </div>
+            <div class="invalid-feedback">
+                Please input a Employee.
+            </div>
+        </div>
+    </div>
     <div class="col-md-12 col-sm-12 col-lg-6">
         <label style="font-weight:600">From</label>
         <div class="input-group">
@@ -154,61 +90,143 @@
             </div>
         </div>
     </div>
-    @elseif ($tag == "expiration")
-    <div class="col-sm-12">
-        <label style="font-weight:600">Type</label>
-        <div class="input-group">
-            <div class="input-group-text"><i class="bi bi-option"></i></div>
-            <select name="edatalist" id="edatalist" class="form-control form-select">
-                <option value="all" >All</option>
-                <option value="Visa">Visa Expiration</option>
-                <option value="Passport">Passport Expiration</option>
-            </select>
-            <div class="valid-feedback">
-                Looks good!
-            </div>
-            <div class="invalid-feedback">
-                Please input.
-            </div>
-        </div>
-    </div>
-    @else
-    
     @endif
 </form>
 
 <script>
     
     $(document).ready(function () {
-        
-        $('.datepicker').datepicker({
-            format: 'yyyy-mm-dd'
+        $('.datepicker').tempusDominus({
+            localization: {
+            locale: 'en-US',
+            format: 'yyyy-mm-dd',
+            },
         });
         
         $('.form-select').select2({
             dropdownParent: $('#modal-view'),
             theme: 'bootstrap-5'
         });
-        
+    });
+
+    $(".selectAll").unbind("click").click(function(){
+        var tag = $(this).attr("tag");
+        if($(this).is(':checked')){
+            $("."+tag).prop('checked', true);
+        }else{
+            $("."+tag).prop('checked', false);
+        }
     });
     
     $("#saveModal").unbind("click").click(function(){
-        if($("#tag").val() == "hrreport" || $("#tag").val() == "infosheet"){
+        if($("#tag").val() == "hrreport"){
             var edata = $("input[name=edata]:checked").map(function () {return this.value;}).get().join(","); 
             $("#edatalist").val(edata);
         }
 
-        if($("#tag").val() == "infosheet"){
-            if($("#applicant_id").val() == ""){
-                Swal.fire({
-                    icon: 'info',
-                    title: "Please Select An Applicant",
-                    // text: "Please contact developer."
-                })
-                return false;
+        jQuery('#reportForm').submit();
+    });
+
+    $('.employee-select').select2({
+        theme: 'bootstrap-5',
+        dropdownParent: $('#modal-view'),
+        ajax: {
+            placeholder: 'Search Employee',
+            allowClear: true,
+            type : "POST",
+            data:function (params) {
+                var query = {
+                    search: params.term,
+                    dataSearch:"user",
+                    mode:"single",
+                }
+                return query;
+            },
+            async: false,
+            url: "{{ url('getDropdown/dropdown') }}",
+            dataType: 'json',
+            delay: 500,
+            minimumInputLength: 1,
+            processResults: function (data) {
+                return {
+                    results: $.map(data.items, function (item) {
+                        return {
+                            text: item.name,
+                            units: item.units,
+                            id: item.id
+                        }
+                    })
+                };
             }
         }
-        jQuery('#reportForm').submit();
+    });
+    
+    $('.office-select').select2({
+        theme: 'bootstrap-5',
+        dropdownParent: $('#modal-view'),
+        ajax: {
+            placeholder: 'Search Office',
+            allowClear: true,
+            type : "POST",
+            data:function (params) {
+                var query = {
+                    search: params.term,
+                    dataSearch:"office",
+                    mode:"single",
+                }
+                return query;
+            },
+            async: false,
+            url: "{{ url('getDropdown/dropdown') }}",
+            dataType: 'json',
+            delay: 500,
+            minimumInputLength: 1,
+            processResults: function (data) {
+                return {
+                    results: $.map(data.items, function (item) {
+                        return {
+                            text: item.name,
+                            units: item.units,
+                            id: item.id
+                        }
+                    })
+                };
+            }
+        }
+    });
+
+    $('.department-select').select2({
+        theme: 'bootstrap-5',
+        dropdownParent: $('#modal-view'),
+        ajax: {
+            placeholder: 'Search Department',
+            allowClear: true,
+            type : "POST",
+            data:function (params) {
+                var query = {
+                    search: params.term,
+                    dataSearch:"department",
+                    mode:"single",
+                }
+                return query;
+            },
+            async: false,
+            url: "{{ url('getDropdown/dropdown') }}",
+            dataType: 'json',
+            delay: 500,
+            minimumInputLength: 1,
+            processResults: function (data) {
+                return {
+                    results: $.map(data.items, function (item) {
+                        return {
+                            text: item.name,
+                            units: item.units,
+                            id: item.id
+                        }
+                    })
+                };
+            }
+        }
     });
     
 </script>
