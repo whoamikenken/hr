@@ -70,7 +70,7 @@ class Timesheet extends Model
                 return array("status" => "Absent", "minutesLate" => $minutesLate);
             } else {
                 // user arrived less than or equal to the tardy start time
-                return array("status" => "On Time", "minutesLate" => $minutesLate);
+                return array("status" => "Absent", "minutesLate" => $minutesLate);
             }
         } else {
             // user arrived before start time
