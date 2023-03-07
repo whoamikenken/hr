@@ -91,7 +91,7 @@ class ReportsController extends Controller
                     $between[] = $value;
                 } else {
                     if ($value) {
-                        $where[] = array("timesheets.".$key, '=', $value);
+                        $where[] = array("employees.".$key, '=', $value);
                     }
                 }
             }
